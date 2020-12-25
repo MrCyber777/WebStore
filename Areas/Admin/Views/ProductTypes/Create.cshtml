@@ -1,0 +1,36 @@
+﻿@model WebStore.Models.ProductTypes
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="mt-1 text-info">Create product type</h1>
+
+
+<form method="post" asp-action="Create">
+    <div class="p-4 border rounded">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Name"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Create" />
+            <a class="btn btn-success" asp-action="Index">Back to list</a>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+} 
+

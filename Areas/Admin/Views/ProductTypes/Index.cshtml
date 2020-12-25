@@ -1,0 +1,51 @@
+﻿@model IEnumerable<WebStore.Models.ProductTypes>
+@{
+    ViewData["Title"] = "Index";
+}
+
+@*Check, if Sucessful message exists*@
+@if (TempData["SM"] != null)
+{
+    <div class="row text-center">
+        <div class="col-12 alert alert-success">
+            @TempData["SM"]
+        </div>
+    </div>
+}
+
+<div class="row mt-2">
+    <div class="col-6">
+        <h2 class="text-info">Product Type List</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a asp-action="Create" class="btn btn-info">New Product Type</a>
+    </div>
+</div>
+
+<div class="mt-1">
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-info">
+                <th>@Html.DisplayNameFor(x => x.Name)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(x => item.Name)
+                    </td>
+                    <td style="width: 150px;">
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-primary" href="#">Edit</a>
+                            <a class="btn btn-success" href="#">Details</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
