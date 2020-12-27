@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<WebStore.Models.ProductTypes>
+@using System.Web
 @{
     ViewData["Title"] = "Index";
 }
@@ -39,7 +40,7 @@
                     </td>
                     <td style="width: 150px;">
                         <div class="btn-group" role="group">
-                            <a class="btn btn-primary" href="#">Edit</a>
+                            <a class="btn btn-primary" href="@HttpUtility.UrlDecode(Url.Action($"Edit/{item.Id}"))">Edit</a>
                             <a class="btn btn-success" href="#">Details</a>
                             <a class="btn btn-danger" href="#">Delete</a>
                         </div>

@@ -27,7 +27,7 @@ namespace WebStore.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            // return View
+            //Возвращает представление
             return View();
         }
         //POST:Admin/ProductTypes/Create
@@ -53,6 +53,39 @@ namespace WebStore.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
 
             
+        }
+        //GET:Admin/ProductTypes/Edit
+        [HttpGet]
+        public IActionResult Edit(int? Id)
+        {
+            if (Id == null)
+            {
+                return NotFound();
+            }
+            var id =  _db.ProductsTypes.Find(Id);            
+            if (id == null)
+            {
+                return NotFound();
+            }
+            return View(id);
+        }
+        //POST:Admin/ProductTypes/Edit
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductTypes productType,int id)
+        {
+            if (id != productType.Id)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(productType);          
+            }
+            _db.Update(productType);
+            await _db.SaveChangesAsync();
+            TempData["SM"] = $"Product type: {productType.Id} edited successfully ";
+            return RedirectToAction(nameof(Index));           
+
         }
     }
 }
