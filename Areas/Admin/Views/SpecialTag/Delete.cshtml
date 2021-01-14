@@ -1,0 +1,23 @@
+﻿@model WebStore.Models.SpecialTag
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="mt-1 text-info">Delete special tag type</h1>
+<form method="post" asp-action="Delete">
+    <div class="p-4 border rounded">
+        <partial name="_NewEditionPartial" />        
+        <partial name="_SpecialSalePartial" />        
+        <partial name="_BestSellerPartial" />
+        
+
+
+        <div class="form-group">
+            <input type="submit" asp-route-id="@Model.Id" class="btn btn-danger" value="Delete" />
+            <a class="btn btn-success" asp-action="Index">Back to list</a>
+        </div>
+    </div>
+   
+
+</form>
+

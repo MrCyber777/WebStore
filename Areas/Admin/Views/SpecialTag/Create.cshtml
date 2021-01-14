@@ -1,0 +1,24 @@
+﻿
+@model WebStore.Models.SpecialTag
+@{
+    ViewData["Title"] = "Create";
+}
+<h1 class="mt-1 text-info">Create special tag type</h1>
+<form method="post" asp-action="Create">
+    <div class="p-4 border rounded">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <partial name="_NewEditionPartial" />
+        <partial name="_SpecialSalePartial" />
+        <partial name="_BestSellerPartial" />
+        <br />
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Create" />
+            <a class="btn btn-success" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

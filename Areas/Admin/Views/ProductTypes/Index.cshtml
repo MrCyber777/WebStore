@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<WebStore.Models.ProductTypes>
-@using System.Web
 @{
     ViewData["Title"] = "Index";
 }
@@ -19,7 +18,7 @@
         <h2 class="text-info">Product Type List</h2>
     </div>
     <div class="col-6 text-right">
-        <a asp-action="Create" class="btn btn-info">New Product Type</a>
+        <a asp-action="Create" class="btn btn-info"><i class="fas fa-plus"></i>&nbsp; Product Type</a>
     </div>
 </div>
 
@@ -38,13 +37,7 @@
                     <td>
                         @Html.DisplayFor(x => item.Name)
                     </td>
-                    <td style="width: 150px;">
-                        <div class="btn-group" role="group">
-                            <a class="btn btn-primary" href="@HttpUtility.UrlDecode(Url.Action($"Edit/{item.Id}"))">Edit</a>
-                            <a class="btn btn-success" href="#">Details</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
-                        </div>
-                    </td>
+                    <partial name="_TableButtonPartial" model="item.Id" />
                 </tr>
             }
         </tbody>

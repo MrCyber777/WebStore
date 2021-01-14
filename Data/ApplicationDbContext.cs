@@ -16,5 +16,6 @@ namespace WebStore.Data
 
         // Add new db context
         public DbSet<ProductTypes> ProductsTypes { get; set; }
+        public DbSet<SpecialTag> SpecialTags { get; set; }
     }
 }

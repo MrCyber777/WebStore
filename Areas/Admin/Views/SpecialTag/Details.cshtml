@@ -1,0 +1,21 @@
+﻿@model WebStore.Models.SpecialTag
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="mt-1 text-info">Special Tag Type Details</h1>
+<div class="p-4 border rounded">
+    <partial name="_NewEditionPartial" />   
+    <partial name="_SpecialSalePartial" />
+    <partial name="_BestSellerPartial" />
+
+
+    <div class="form-group">
+        <a asp-route-id="@Model.Id" class="btn btn-primary" asp-action="Edit">Edit</a>
+        <a class="btn btn-success" asp-action="Index">Back to list</a>
+    </div>
+</div>
+
+
+
+

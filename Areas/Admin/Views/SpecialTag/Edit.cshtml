@@ -1,31 +1,23 @@
-﻿@model WebStore.Models.ProductTypes
+﻿@model WebStore.Models.SpecialTag
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1 class="mt-1 text-info">Edit product type</h1>
+<h1 class="mt-1 text-info">Edit special tag type</h1>
 <form method="post" asp-action="Edit">
     <div class="p-4 border rounded">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
-        <div class="row form-group">
-            <div class="col-2">
-                <label asp-for="Name"></label>
-            </div>
-            <div class="col-5">
-                <input asp-for="Name" class="form-control" />
-            </div>
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <br />
-
+        <partial name="_NewEditionPartial" />       
+        <partial name="_SpecialSalePartial" />      
+        <partial name="_BestSellerPartial" />
+      
 
         <div class="form-group">
             <input type="submit" asp-route-id="@Model.Id" class="btn btn-primary" value="Edit" />
             <a class="btn btn-success" asp-action="Index">Back to list</a>
         </div>
     </div>
-
 </form>
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
