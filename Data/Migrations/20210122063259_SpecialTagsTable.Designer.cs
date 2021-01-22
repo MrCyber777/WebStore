@@ -10,7 +10,7 @@ using WebStore.Data;
 namespace WebStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210113063658_SpecialTagsTable")]
+    [Migration("20210122063259_SpecialTagsTable")]
     partial class SpecialTagsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,6 +221,43 @@ namespace WebStore.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("WebStore.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Available")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShadeColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SpecialTagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("SpecialTagId");
+
+                    b.ToTable("Products");
+                });
+
             modelBuilder.Entity("WebStore.Models.ProductTypes", b =>
                 {
                     b.Property<int>("Id")
@@ -245,17 +282,7 @@ namespace WebStore.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("bestSeller")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("newEdition")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("specialSale")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
@@ -312,6 +339,21 @@ namespace WebStore.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebStore.Models.Product", b =>
+                {
+                    b.HasOne("WebStore.Models.ProductTypes", "ProductTypes")
+                        .WithMany()
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebStore.Models.SpecialTag", "SpecialTags")
+                        .WithMany()
+                        .HasForeignKey("SpecialTagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -21,9 +21,7 @@ namespace WebStore.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    bestSeller = table.Column<string>(maxLength: 30, nullable: false),
-                    newEdition = table.Column<string>(maxLength: 30, nullable: false),
-                    specialSale = table.Column<string>(maxLength: 30, nullable: false)
+                    Name = table.Column<string>(maxLength: 30, nullable: false),                  
                 },
                 constraints: table =>
                 {
@@ -33,16 +31,7 @@ namespace WebStore.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "SpecialTags");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "ProductsTypes",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 30);
         }
     }
 }

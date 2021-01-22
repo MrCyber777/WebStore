@@ -25,9 +25,7 @@
     <table class="table table-striped">
         <thead>
             <tr class="table-info">
-                <th>@Html.DisplayNameFor(x=>x.newEdition)</th>
-                <th>@Html.DisplayNameFor(x=>x.bestSeller)</th>
-                <th>@Html.DisplayNameFor(x=>x.specialSale)</th>
+                <th>@Html.DisplayNameFor(x=>x.Name)</th>                
                 <th></th>
             </tr>
         </thead>
@@ -36,14 +34,8 @@
             {
             <tr>
                 <td>
-                    @Html.DisplayFor(x => item.newEdition)
-                </td>
-                <td>
-                    @Html.DisplayFor(x=>item.bestSeller)
-                </td>
-                <td>
-                    @Html.DisplayFor(x=>item.specialSale)
-                </td>
+                    @Html.DisplayFor(x => item.Name)
+                </td>                
                 <partial name="_TableButtonPartial" model="item.Id" />
             </tr>
             }

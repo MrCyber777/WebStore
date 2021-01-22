@@ -5,11 +5,15 @@
 
 <h1 class="mt-1 text-info">Special Tag Type Details</h1>
 <div class="p-4 border rounded">
-    <partial name="_NewEditionPartial" />   
-    <partial name="_SpecialSalePartial" />
-    <partial name="_BestSellerPartial" />
-
-
+    <div class="row form-group">
+        <div class="col-2">
+            <label asp-for="Name"></label>
+        </div>
+        <div class="col-5">
+            <input asp-for="Name"class="form-control" disabled />
+        </div>
+    </div>   
+    <br />
     <div class="form-group">
         <a asp-route-id="@Model.Id" class="btn btn-primary" asp-action="Edit">Edit</a>
         <a class="btn btn-success" asp-action="Index">Back to list</a>

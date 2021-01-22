@@ -26,6 +26,7 @@ namespace WebStore.Areas.Admin.Controllers
         }
         //POST:Admin/SpecialTag/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task <IActionResult> Create(SpecialTag specialTag)
         {
             //Проверяем модель на валидность
@@ -37,7 +38,7 @@ namespace WebStore.Areas.Admin.Controllers
             //Если модель валидная-добавляем значение значение полей модели в сущности Entity
             _db.Add(specialTag);
             await _db.SaveChangesAsync();
-            TempData["SM"] = $"Special tag:{specialTag.newEdition} added successfully";
+            TempData["SM"] = $"Special tag:{specialTag.Name} added successfully";
             return RedirectToAction(nameof(Index));
         }
         //GET:Admin/SpecialTag/Edit
@@ -62,7 +63,7 @@ namespace WebStore.Areas.Admin.Controllers
 
             _db.Update(specialTag);
             await _db.SaveChangesAsync();
-            TempData["SM"] = $"Special tag type: {specialTag.newEdition} edited successfully ";
+            TempData["SM"] = $"Special tag type: {specialTag.Name} edited successfully ";
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
@@ -94,7 +95,7 @@ namespace WebStore.Areas.Admin.Controllers
             {
                 _db.SpecialTags.Remove(specialTag);
                 await _db.SaveChangesAsync();
-                TempData["SM"] = $"Special tag type {specialTag.newEdition}  has been deleted successfully";
+                TempData["SM"] = $"Special tag type {specialTag.Name}  has been deleted successfully";
             }
             else
                 TempData["SM"] = $"Special tag type  can not be deleted";
