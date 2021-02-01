@@ -21,6 +21,7 @@
     <Folder Include="Controllers\" />
     <Folder Include="Views\Areas\Admin\Controllers\" />
     <Folder Include="Views\Areas\Admin\Views\" />
+    <Folder Include="wwwroot\Images\ProductImage\" />
   </ItemGroup>
 
 </Project>
