@@ -1,0 +1,114 @@
+﻿@model WebStore.Models.ViewModel.ProductsViewModel
+@using WebStore.Extensions
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 class="mt-1 text-info">Edit product</h1>
+
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+    <div class="p-4 border rounded row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Products.Id" />
+        <div class="col-8">
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="Products.Name"></label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Products.Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Products.Name" class="text-danger"></span>
+            </div>
+            <br />
+
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="Products.Price"></label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Products.Price" />
+                </div>
+                <span asp-validation-for="Products.Price"></span>
+            </div>
+            <br />
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="Products.Image"></label>
+                </div>
+                <div class="col-5">
+                    <input type="file" name="files" asp-for="Products.Image" />
+                </div>
+            </div>
+            <br />
+
+
+
+
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="Products.ShadeColor"></label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Products.ShadeColor" />
+                </div>
+            </div>
+            <br />
+
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="ProductTypes"></label>
+                </div>
+                <div class="col-5">
+                    <select asp-for="Products.ProductTypeId" asp-items='Model.ProductTypes.ToSelectListItem(Model.Products.ProductTypeId)'>
+                        <option value="">Select a Product Type</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="SpecialTags"></label>
+                </div>
+                <div class="col-5">
+                    <select asp-for="Products.SpecialTagId" asp-items='Model.SpecialTags.ToSelectListItem(Model.Products.SpecialTagId)'>
+                        <option value="">Select a Product Type</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="Products.Available"></label>
+                </div>
+                <div class="col-5">
+                    <input type="checkbox" asp-for="Products.Available" class="form-control" style="width: 15px" />
+                </div>
+                <span asp-validation-for="Products.Available"></span>
+            </div>
+        </div>
+
+        <div class="col-1">
+
+        </div>
+        <div class="col-3">
+            <img src="@Model.Products.Image" width="100%" style="border: 1px solid #bbb9b9; border-radius: 5px;" />
+        </div>
+
+
+        <br />
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Edit" />
+            <a class="btn btn-success" asp-action="Index">Back to list</a>
+        </div>
+    </div>
+</form>
+
+
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

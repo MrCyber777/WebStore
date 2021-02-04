@@ -109,5 +109,63 @@ namespace WebStore.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));       
 
     }
+        //GET: Admin/Products/Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            // 1. Проверяем полученный ID на Null
+            if(id is null)           
+                return NotFound();
+
+            // 2. Заполняем ViewModel данными из базы
+            productsVM.Products = await _db.Products
+                                           .Include(x => x.ProductTypes)
+                                           .Include(x => x.SpecialTags)
+                                           .FirstOrDefaultAsync(x=>x.Id==id);
+
+            // 3. Проверяем, найдены ли данные или получен null
+            if (productsVM.Products is null)
+                return NotFound();
+
+            // 4. Если данные найдены, возвращаем модель в представление
+            return View(productsVM);
+        }
+        //POST:Admin/Products/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit()
+        {            
+            if (!ModelState.IsValid)
+                return View(productsVM);
+
+              _db.Products.Add(productsVM.Products);
+
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            var files = HttpContext.Request.Form.Files;
+
+            var productFromDb = await _db.Products.FindAsync(productsVM.Products.Id,Path.GetExtension(files[0].FileName));
+            if ((files.Count != 0)&&(files!=null))
+            {
+                var uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
+                var extension = Path.GetExtension(files[0].FileName);
+                var previousExtension = productFromDb;
+
+                if (System.IO.File.Exists(Path.Combine(uploadPath+productsVM.Products.Id+previousExtension)))
+                {
+                    System.IO.File.Delete(Path.Combine(uploadPath+productsVM.Products.Id+previousExtension));
+                    System.IO.File.Copy(uploadPath, webRootPath + @"\" + SD.ImageFolder + @"\" + productsVM.Products.Id + extension);
+                    productsVM.Products.Image= $"\\{SD.ImageFolder}\\{productsVM.Products.Id}.png";
+                }
+                if(productsVM.Products.Image!=null)
+                    productFromDb.Image = $"\\{SD.ImageFolder}\\{productsVM.Products.Id}.png";
+               _db.Update(productsVM);
+
+            }
+            await _db.SaveChangesAsync();
+
+            TempData["SM"] = $"Image {productsVM.Products.Image} has been changed successfully";
+
+            return RedirectToAction(nameof(Index));
+        }
 }
 }
