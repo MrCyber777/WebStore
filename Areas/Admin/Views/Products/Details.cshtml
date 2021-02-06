@@ -1,0 +1,67 @@
+﻿@model WebStore.Models.ViewModel.ProductsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="mt-1 text-info">Product Details</h1>
+
+<div class="p-4 border rounded row">
+    <div class="col-8">
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.Name"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Products.Name" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.Price"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Products.Price" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="ProductTypes"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Products.ProductTypes.Name" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="SpecialTags"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Products.SpecialTags.Name" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.ShadeColor"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Products.ShadeColor" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.Available"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Products.Available" class="form-control" style="width: 15px" disabled />
+            </div>
+        </div>
+    </div>   
+    <div class="col-3 offset-1">
+        <img src="@Model.Products.Image" width="100%" style="border: 1px solid #bbb9b9; border-radius:5px;" />
+    </div>
+    <br />
+    <div class="form-group">
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Products.Id">Edit product</a>
+        <a class="btn btn-success" asp-action="Index">Back to list</a>
+    </div>
+</div>

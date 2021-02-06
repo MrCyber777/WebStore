@@ -18,10 +18,10 @@ namespace WebStore.Areas.Admin.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
 
         [BindProperty]// Привязывает свойство к Post методам всего контроллера ( не требует передачи через параметр ) 
-        
+
         public ProductsViewModel productsVM { get; set; }
 
-        public ProductsController(ApplicationDbContext db,IWebHostEnvironment hostingEnvironment)
+        public ProductsController(ApplicationDbContext db, IWebHostEnvironment hostingEnvironment)
         {
             _db = db;
             _hostingEnvironment = hostingEnvironment;
@@ -33,9 +33,9 @@ namespace WebStore.Areas.Admin.Controllers
                 SpecialTags = _db.SpecialTags.ToList()
             };
         }
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            var products =  _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);
+            var products = _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);
             return View(await products.ToListAsync());
         }
         //GET:Admin/Products/Create
@@ -106,22 +106,22 @@ namespace WebStore.Areas.Admin.Controllers
             TempData["SM"] = $"Product {productsVM.Products.Name} has been added successfully";
 
             // Переадресовываем пользователя на страницу Index
-            return RedirectToAction(nameof(Index));       
+            return RedirectToAction(nameof(Index));
 
-    }
+        }
         //GET: Admin/Products/Edit
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             // 1. Проверяем полученный ID на Null
-            if(id is null)           
+            if (id is null)
                 return NotFound();
 
             // 2. Заполняем ViewModel данными из базы
             productsVM.Products = await _db.Products
                                            .Include(x => x.ProductTypes)
                                            .Include(x => x.SpecialTags)
-                                           .FirstOrDefaultAsync(x=>x.Id==id);
+                                           .FirstOrDefaultAsync(x => x.Id == id);
 
             // 3. Проверяем, найдены ли данные или получен null
             if (productsVM.Products is null)
@@ -134,38 +134,101 @@ namespace WebStore.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit()
-        {            
+        {
             if (!ModelState.IsValid)
                 return View(productsVM);
 
-              _db.Products.Add(productsVM.Products);
+
 
             string webRootPath = _hostingEnvironment.WebRootPath;
             var files = HttpContext.Request.Form.Files;
 
-            var productFromDb = await _db.Products.FindAsync(productsVM.Products.Id,Path.GetExtension(files[0].FileName));
-            if ((files.Count != 0)&&(files!=null))
+            Product productFromDb = await _db.Products.FirstOrDefaultAsync(x => x.Id == productsVM.Products.Id);
+            if ((files.Count != 0) && (files[0] != null))
             {
-                var uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
-                var extension = Path.GetExtension(files[0].FileName);
-                var previousExtension = productFromDb;
+                string uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
+                string extension = Path.GetExtension(files[0].FileName);
+                string previousExtension = Path.GetExtension(productFromDb.Image);
 
-                if (System.IO.File.Exists(Path.Combine(uploadPath+productsVM.Products.Id+previousExtension)))
+                if (System.IO.File.Exists(Path.Combine(uploadPath + productsVM.Products.Id + previousExtension)))
+                    System.IO.File.Delete(Path.Combine(uploadPath + productsVM.Products.Id + previousExtension));
+
+                using (var fileStream = new FileStream(Path.Combine(uploadPath, productsVM.Products.Id + extension), FileMode.Create))
                 {
-                    System.IO.File.Delete(Path.Combine(uploadPath+productsVM.Products.Id+previousExtension));
-                    System.IO.File.Copy(uploadPath, webRootPath + @"\" + SD.ImageFolder + @"\" + productsVM.Products.Id + extension);
-                    productsVM.Products.Image= $"\\{SD.ImageFolder}\\{productsVM.Products.Id}.png";
+                    await files[0].CopyToAsync(fileStream);
                 }
-                if(productsVM.Products.Image!=null)
-                    productFromDb.Image = $"\\{SD.ImageFolder}\\{productsVM.Products.Id}.png";
-               _db.Update(productsVM);
 
+
+                productsVM.Products.Image = $"\\{SD.ImageFolder}\\{productsVM.Products.Id}{extension}";
             }
+            if (productsVM.Products.Image != null)
+                productFromDb.Image = productsVM.Products.Image;
+
+            productFromDb.Name = productsVM.Products.Name;
+            productFromDb.Price = productsVM.Products.Price;
+            productFromDb.Available = productsVM.Products.Available;
+            productFromDb.ShadeColor = productsVM.Products.ShadeColor;
+            productFromDb.ProductTypeId = productsVM.Products.ProductTypeId;
+            productFromDb.SpecialTagId = productsVM.Products.SpecialTagId;
+
+
             await _db.SaveChangesAsync();
 
-            TempData["SM"] = $"Image {productsVM.Products.Image} has been changed successfully";
+            TempData["SM"] = $"Product {productsVM.Products.Name} has been changed successfully";
 
             return RedirectToAction(nameof(Index));
         }
-}
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
+            productsVM.Products = await _db.Products
+                                         .Include(x => x.ProductTypes)
+                                         .Include(x => x.SpecialTags)
+                                         .FirstOrDefaultAsync(x => x.Id == id);
+            if (productsVM.Products == null)
+                return NotFound();
+
+            return View(productsVM);
+        }
+        [HttpGet]
+        public async Task<IActionResult>Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+            productsVM.Products = await _db.Products.Include(x => x.ProductTypes)
+                                                    .Include(x => x.SpecialTags)
+                                                    .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (productsVM.Products == null)
+                return NotFound();
+
+            return View(productsVM);
+        }
+        [HttpPost]       
+        public async Task<IActionResult>Delete()
+        {
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            var files = HttpContext.Request.Form.Files;
+            Product productFromDb = await _db.Products.FirstOrDefaultAsync(x=>x.Id==productsVM.Products.Id);
+
+            if (productsVM.Products == null)
+                return NotFound();
+            else
+            {               
+                if ((files.Count != 0 )&&(files[0]!= null))
+                {
+                    string uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
+                    string extension = Path.GetExtension(files[0].FileName);
+                    if (System.IO.File.Exists(uploadPath + productsVM.Products.Id + extension))
+                        System.IO.File.Delete(uploadPath + productsVM.Products.Id + extension);
+                    _db.Products.Remove(productsVM.Products);
+                }                              
+            }
+            await _db.SaveChangesAsync();
+            TempData["SM"] = $"Product{productsVM.Products.Name} has been deleted successfully";
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

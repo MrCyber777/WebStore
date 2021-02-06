@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<WebStore.Models.Product>
+@using System
 @{
     ViewData["Title"] = "Index";
 }
@@ -39,7 +40,8 @@
                     @Html.DisplayFor(x => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(x => item.Price)
+                    @String.Format("{0:C}",item.Price)
+                    @*@Html.DisplayFor(x => item.Price)*@
                 </td>
                 <td>
                     @Html.DisplayFor(x => item.Available)
@@ -48,7 +50,8 @@
                     @Html.DisplayFor(x => item.ProductTypes.Name)
                 </td>
                 <td>
-                    @*@Html.DisplayFor(x => item.SpecialTags.Name)*@
+                    @if (item.SpecialTags.Name != "--NONE--")
+                        @Html.DisplayFor(x => item.SpecialTags.Name)
                 </td>
                 <partial name="_TableButtonPartial" model="item.Id" />
             </tr>
