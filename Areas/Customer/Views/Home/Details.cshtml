@@ -1,0 +1,77 @@
+﻿@model WebStore.Models.ViewModel.ProductsViewModel
+@{
+    ViewData["Title"] = Model.Products.Name;
+}
+
+<h1 class="mt-1 text-info">Product Details</h1>
+
+<div class="p-4 border rounded row">
+    <div class="col-8">
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.Name"></label>
+            </div>
+            <div class="col-5 offset-2">
+                <input asp-for="Products.Name" class="form-control" style="width:170%" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.ShadeColor"></label>
+            </div>
+            <div class="col-5 offset-2">
+                <input asp-for="Products.ShadeColor" class="form-control" style="width:170%" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="Products.Price"></label>
+            </div>
+            <div class="col-5 offset-2">
+                <input asp-for="Products.Price" class="form-control" style="width:170%" readonly />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-2">
+                <label asp-for="ProductTypes"></label>
+            </div>
+            <div class="col-5 offset-2">
+                <input asp-for="ProductTypes" class="form-control" style="width:170%" readonly />
+            </div>
+        </div>
+        @if (Model.Products.SpecialTags.Name != "--NONE--")
+        {
+            <div class="row form-group">
+                <div class="col-2">
+                    <label asp-for="Products.SpecialTags"></label>
+                </div>
+                <div class="col-5 offset-2">
+                    <input asp-for="Products.SpecialTags" class="form-control" style="width:170%" readonly />
+                    @*<a class="btn btn-primary" asp-action="AddToCart" asp-route-id="@Model.Products.Id" style="width:170%">Add To Cart</a>*@
+                </div>
+            </div>
+        }
+
+
+        <div class="row form-group">
+            <div class="col-5 offset-4">
+                <a class="btn btn-primary" asp-action="AddToCart" asp-route-id="@Model.Products.Id" style="width:170%">Add To Cart</a>
+            </div>
+        </div>
+               
+                              
+    </div>
+  
+    <div class="col-3 offset-1">
+        <img src="@Model.Products.Image" width="100%" style="border: 1px solid #bbb9b9; border-radius:5px;" />  
+        @if (Model.Products.Available)
+        {
+            <img src="~/Images/ProductImage/image.png"/>
+        }
+    </div> 
+        <br />
+                              
+    <div class="form-group">
+        <a class="btn btn-success" asp-action="Index">Back to list</a>
+    </div>
+</div>

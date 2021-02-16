@@ -1,7 +1,30 @@
-﻿
+﻿@model List<WebStore.Models.Product>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Welcome from customer Area</h1>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-4">
+            <div class="card  mb-4">
+                <div class="card-header text-center text-info text-uppercase font-weight-bold">@item.Name</div>
+                <div class="card-body">
+                    <img src="@item.Image" style="height:100%" class="card-img-top" alt="Product Image" />
+                    <p class="card-text"></p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <h6 class="text-danger"><b>@String.Format("{0:C}", @item.Price)</b></h6>
+                        </div>
+                        <a class="btn btn-outline-info" asp-controller="Home" asp-route-id="@item.Id" asp-action="Details">View Details</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
 

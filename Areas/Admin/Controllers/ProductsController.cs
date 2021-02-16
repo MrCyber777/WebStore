@@ -193,7 +193,7 @@ namespace WebStore.Areas.Admin.Controllers
             return View(productsVM);
         }
         [HttpGet]
-        public async Task<IActionResult>Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
                 return NotFound();
@@ -206,25 +206,22 @@ namespace WebStore.Areas.Admin.Controllers
 
             return View(productsVM);
         }
-        [HttpPost]       
-        public async Task<IActionResult>Delete()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete()
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            var files = HttpContext.Request.Form.Files;
-            Product productFromDb = await _db.Products.FirstOrDefaultAsync(x=>x.Id==productsVM.Products.Id);
+            Product productFromDb = await _db.Products.FirstOrDefaultAsync(x => x.Id == productsVM.Products.Id);
 
-            if (productsVM.Products == null)
+            if (productFromDb == null)
                 return NotFound();
             else
-            {               
-                if ((files.Count != 0 )&&(files[0]!= null))
-                {
-                    string uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
-                    string extension = Path.GetExtension(files[0].FileName);
-                    if (System.IO.File.Exists(uploadPath + productsVM.Products.Id + extension))
-                        System.IO.File.Delete(uploadPath + productsVM.Products.Id + extension);
-                    _db.Products.Remove(productsVM.Products);
-                }                              
+            {
+                string uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
+                string extension = Path.GetExtension(productFromDb.Image);
+                if (System.IO.File.Exists(uploadPath + productFromDb.Id + extension))
+                    System.IO.File.Delete(uploadPath + productFromDb.Id + extension);
+                _db.Products.Remove(productFromDb);
             }
             await _db.SaveChangesAsync();
             TempData["SM"] = $"Product{productsVM.Products.Name} has been deleted successfully";

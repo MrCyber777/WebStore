@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace WebStore.Areas.Customer.Controllers
 {
     [Area(nameof(Customer))]
-    public class HomeController : Controller
+    public class UserHomeController : Controller
     {
         public IActionResult Index()
         {
