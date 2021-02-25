@@ -1,77 +1,101 @@
-﻿@model WebStore.Models.ViewModel.ProductsViewModel
+﻿@using Microsoft.AspNetCore.Http
+@using WebStore.Extensions
+@inject IHttpContextAccessor httpContextAccessor
+@model WebStore.Models.Product
 @{
-    ViewData["Title"] = Model.Products.Name;
+    ViewData["Title"] = Model.Name;
 }
 
 <h1 class="mt-1 text-info">Product Details</h1>
 
-<div class="p-4 border rounded row">
-    <div class="col-8">
-        <div class="row form-group">
-            <div class="col-2">
-                <label asp-for="Products.Name"></label>
-            </div>
-            <div class="col-5 offset-2">
-                <input asp-for="Products.Name" class="form-control" style="width:170%" readonly />
-            </div>
-        </div>
-        <div class="row form-group">
-            <div class="col-2">
-                <label asp-for="Products.ShadeColor"></label>
-            </div>
-            <div class="col-5 offset-2">
-                <input asp-for="Products.ShadeColor" class="form-control" style="width:170%" readonly />
-            </div>
-        </div>
-        <div class="row form-group">
-            <div class="col-2">
-                <label asp-for="Products.Price"></label>
-            </div>
-            <div class="col-5 offset-2">
-                <input asp-for="Products.Price" class="form-control" style="width:170%" readonly />
-            </div>
-        </div>
-        <div class="row form-group">
-            <div class="col-2">
-                <label asp-for="ProductTypes"></label>
-            </div>
-            <div class="col-5 offset-2">
-                <input asp-for="ProductTypes" class="form-control" style="width:170%" readonly />
-            </div>
-        </div>
-        @if (Model.Products.SpecialTags.Name != "--NONE--")
-        {
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="p-4 border rounded row">
+        <div class="col-8">
             <div class="row form-group">
-                <div class="col-2">
-                    <label asp-for="Products.SpecialTags"></label>
+                <div class="col-4">
+                    <label asp-for="Name"></label>
                 </div>
-                <div class="col-5 offset-2">
-                    <input asp-for="Products.SpecialTags" class="form-control" style="width:170%" readonly />
-                    @*<a class="btn btn-primary" asp-action="AddToCart" asp-route-id="@Model.Products.Id" style="width:170%">Add To Cart</a>*@
+                <div class="col-8">
+                    <input asp-for="Name" class="form-control" readonly />
                 </div>
             </div>
-        }
 
-
-        <div class="row form-group">
-            <div class="col-5 offset-4">
-                <a class="btn btn-primary" asp-action="AddToCart" asp-route-id="@Model.Products.Id" style="width:170%">Add To Cart</a>
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="ShadeColor"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ShadeColor" class="form-control" readonly />
+                </div>
             </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="Price"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Price" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="ProductTypes"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductTypes.Name" class="form-control" readonly />
+                </div>
+            </div>
+
+            @if (!Model.SpecialTags.Name.Equals("--NONE--"))
+            {
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label asp-for="SpecialTags"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpecialTags.Name" class="form-control" readonly />
+                        @*<a class="btn btn-primary" asp-action="AddToCart" asp-route-id="@Model.Products.Id" style="width:170%">Add To Cart</a>*@
+                    </div>
+                </div>
+            }
+
+
+            <div class="row form-group">
+                <div class="col-8 offset-4">
+                    @{
+                        var isInCart = false;
+                        List<int> listOfCart = httpContextAccessor.HttpContext.Session.Get<List<int>>("sShoppingCart");
+                        if ((listOfCart is not null) && (listOfCart.Contains(Model.Id)))
+                            isInCart = true;
+                    }
+                    @if (isInCart == true)
+                    {
+                        <button type="submit" class="btn btn-danger form-control" asp-route-id="@Model.Id">Remove From Cart</button>
+                    }
+
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary form-control" asp-route-id="@Model.Id">Add To Cart</button>
+                    }
+                </div>
+            </div>
+
+
         </div>
-               
-                              
-    </div>
-  
-    <div class="col-3 offset-1">
-        <img src="@Model.Products.Image" width="100%" style="border: 1px solid #bbb9b9; border-radius:5px;" />  
-        @if (Model.Products.Available)
-        {
-            <img src="~/Images/ProductImage/image.png"/>
-        }
-    </div> 
+
+        <div class="col-3 offset-1">
+            <img src="@Model.Image" width="100%" style="border: 1px solid #bbb9b9; border-radius:5px;" />
+            @if (Model.Available)
+            {
+                <img src="~/Images/ProductImage/image.png" />
+            }
+        </div>
         <br />
-                              
-    <div class="form-group">
-        <a class="btn btn-success" asp-action="Index">Back to list</a>
+
+        <div class="form-group">
+            <a class="btn btn-success" asp-action="Index">Back to list</a>
+        </div>
     </div>
-</div>
+</form>

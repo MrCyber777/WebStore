@@ -37,6 +37,16 @@ namespace WebStore
 
             // Add dpendency MVC Route
             services.AddMvc(options => options.EnableEndpointRouting = false);
+
+            // Add midleware logic Sessions and coockie
+            services.AddSession(options =>
+            {
+                // Wating session time
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+
+                // Activating coockie
+                options.Cookie.HttpOnly = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +70,9 @@ namespace WebStore
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Say to application: "Use the session"
+            app.UseSession();
 
             //app.UseEndpoints(endpoints =>
             //{

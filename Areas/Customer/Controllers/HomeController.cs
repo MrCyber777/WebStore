@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Data;
+using WebStore.Extensions;
 using WebStore.Models;
 using WebStore.Models.ViewModel;
 
@@ -12,6 +16,7 @@ namespace WebStore.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
+        public int PageSize = 4;
 
         [BindProperty]
         public ProductsViewModel productsVM { get; set; }
@@ -27,23 +32,42 @@ namespace WebStore.Customer.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var productList = await _db.Products.Include(x => x.ProductTypes)
-                                                .Include(x => x.SpecialTags)
-                                                .ToListAsync();
+            var productList = await _db.Products.ToListAsync();
             return View(productList);
         }
+      
         [HttpGet]
         public async Task<IActionResult>Details(int? id)
         {
             if (id == null)
                 return NotFound();
-            productsVM.Products = await _db.Products.Include(x => x.ProductTypes)
-                                                    .Include(x => x.SpecialTags)
-                                                    .FirstOrDefaultAsync(x=>x.Id==id);
-            if (productsVM.Products == null)
+            Product product = await _db.Products.FindAsync(id);
+                                                                       
+            if (product == null)
                      return NotFound();
 
-            return View(productsVM);
-        }
+            return View(product);
+        } 
+        [HttpPost]
+        [ActionName("Details")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DetailsPost(int id)
+        {
+            // Создать массив типа Лист и записать в него десериализованные данные из сессии
+            List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>("sShoppingCart");
+
+            // Проверяем, если наш созданный лист равен null, то создаём новый экземпляр
+            if (listOfShoppingCart is null)
+                listOfShoppingCart = new List<int>();
+
+            // Добавляем полученный из представления ID в массив
+            listOfShoppingCart.Add(id);
+
+            // Сериализуем и записываем в сессию лист с ID товаров
+            HttpContext.Session.Set("sShoppingCart", listOfShoppingCart);
+
+            // Переадресовываем пользователя на страницу Index
+            return RedirectToAction(nameof(Index));
+        }      
     }
 }

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@using WebStore.Extensions
+@inject IHttpContextAccessor httpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,6 +24,7 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
+
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
@@ -31,6 +36,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
                         </li>
+
+                        @if (httpContextAccessor.HttpContext.Session.Get<List<int>>("sShoppingCart") is not null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    @{
+                                        var count = httpContextAccessor.HttpContext.Session.Get<List<int>>("sShoppingCart").Count;
+
+                                    }
+                                    (@count)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li style="color: white">
+                                <a class="nav-link" asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    (0)
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

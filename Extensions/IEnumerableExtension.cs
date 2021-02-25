@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,5 +21,10 @@ namespace WebStore.Extensions
                        Selected = item.GetPropertyValue("Id").Equals(selectedValue.ToString())
                    };
         }
+
+       //public static IEnumerable<T>Page<T>(this IList<T>items,int pageNumber,int pageSize)
+       // {
+       //     return items.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+       // }
     }
 }
