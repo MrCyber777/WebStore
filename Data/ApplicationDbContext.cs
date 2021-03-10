@@ -18,5 +18,7 @@ namespace WebStore.Data
         public DbSet<ProductTypes> ProductsTypes { get; set; }
         public DbSet<SpecialTag> SpecialTags { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<ProductsForAppointment> ProductsForAppointments { get; set; }
     }
 }

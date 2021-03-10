@@ -15,8 +15,7 @@ namespace WebStore.Customer.Controllers
     [Area(nameof(Customer))]
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public int PageSize = 4;
+        private readonly ApplicationDbContext _db;      
 
         [BindProperty]
         public ProductsViewModel productsVM { get; set; }
@@ -69,5 +68,26 @@ namespace WebStore.Customer.Controllers
             // Переадресовываем пользователя на страницу Index
             return RedirectToAction(nameof(Index));
         }      
+        public IActionResult Remove(int id)
+        {
+            // Создать массив типа Лист и записать в него десериализованные данные из сессии
+            List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>("sShoppingCart");
+
+            // Check, if arrays count > 0
+            if (listOfShoppingCart.Count > 0)
+            {
+                // Check, if element contains
+                if (listOfShoppingCart.Contains(id))
+                    listOfShoppingCart.Remove(id);             
+            }
+            // Update session data
+            HttpContext.Session.Set("sShoppingCart", listOfShoppingCart);
+
+            // Add SM message
+            TempData["SM"] = "Product has been removed successfully!";
+
+            // Redirect to index page
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

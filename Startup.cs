@@ -38,13 +38,13 @@ namespace WebStore
             // Add dpendency MVC Route
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
-            // Add midleware logic Sessions and coockie
+            // Add midleware logic Sessions and cookie
             services.AddSession(options =>
             {
                 // Wating session time
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
 
-                // Activating coockie
+                // Activating cookie
                 options.Cookie.HttpOnly = true;
             });
         }

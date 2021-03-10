@@ -1,4 +1,6 @@
 ﻿
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace WebStore.Models
@@ -24,6 +26,6 @@ namespace WebStore.Models
         
         [ForeignKey("ProductTypeId")]// Внешний ключ смежной таблицы
         public virtual ProductTypes ProductTypes { get; set; } // Свойство смежной таблицы для хранения информации 
-        
+       
     }
 }
