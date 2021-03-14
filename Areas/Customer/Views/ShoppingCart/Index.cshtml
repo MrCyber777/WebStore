@@ -1,0 +1,106 @@
+﻿@model WebStore.Models.ViewModel.ShoppingCartViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<form method="post">    
+        <h2 class="my-3 text-info">Shopping Cart</h2>    
+    @if (Model.Products.Count>0)
+    {
+    <div class="container border border-secondary rounded p-3">
+        <div class="row">
+            <div class="col-8" style="border-right:1px solid #bbb9b9">
+              <table class="table table-striped" width="100%">
+                  <thead class="table-info text-center">
+                      <tr>
+                          <th style="width:20%"></th>
+                          <th>Name</th>
+                          <th>Price</th>
+                          <th>ShadeColor</th>
+                          <th>Product Type</th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>                     
+               @foreach (var item in Model.Products)
+               {
+                      <tr class="text-center p-5">
+                          <td class="align-middle">
+                              <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id">
+                                  <img src="@item.Image" class="image-product-style" />
+                              </a>
+                          </td>
+                          <td class="align-middle">
+                            @Html.DisplayFor(x => item.Name)
+                          </td>
+                          <td class="align-middle">
+                             @String.Format("{0:C}", item.Price)
+                          </td>
+                          <td class="align-middle">
+                              @Html.DisplayFor(x => item.ShadeColor)
+                          </td>
+                          <td  class="align-middle">
+                              @Html.DisplayFor(x => item.ProductTypes.Name)
+                          </td>
+                          <td class="align-middle">
+                              <button type="submit" class="btn btn-danger" asp-area="Customer" asp-controller="Home" asp-action="Remove" asp-route-id="@item.Id"><i class="fas fa-trash"></i></button>
+                          </td>
+                      </tr>
+               }                 
+                  </tbody>
+              </table>
+            </div>
+            <div class="col-4 pl-5">
+                <div class="row">
+                 <div class="col-12">
+                     <label>
+                         Name:                         
+                     </label>                    
+                 </div>
+                    <div class="col-12 pb-3">
+                        <input asp-for="@Model.Appointment.CustomerName" class="form-control"/>
+                    </div>
+                    <div class="col-12">
+                        <label>
+                            Phone Number:
+                        </label>
+                    </div>
+                    <div class="col-12 pb-3">
+                        <input asp-for="@Model.Appointment.CustomerPhoneNumber" class="form-control"/>
+                    </div>
+                    <div class="col-12">
+                        <label>
+                            Email:
+                        </label>
+                    </div>
+                    <div class="col-12 pb-3">
+                        <input asp-for="@Model.Appointment.CustomerEmail" class="form-control"/>
+                    </div>
+                    <div class="col-12">
+                        <label>
+                            Appointment Day:
+                        </label>
+                    </div>
+                    <div class="col-12 pb-3">
+                        <input asp-for="@Model.Appointment.AppointmentDay" type="date" class="form-control"/>
+                    </div>
+                    <div class="col-12">
+                        <label>
+                            Appointment Time:
+                        </label>                      
+                    </div>
+                    <div class="col-12 pb-3">
+                        <input asp-for="@Model.Appointment.AppointmentTime" type="time" min="08:00" max="18:00" class="form-control"/>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit"  id="btnPlaceOrder" class="btn btn-success">Schedule Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    else
+  {
+        <div class="alert alert-danger text-center">No items added to the shopping cart...</div>
+  }
+</form>
