@@ -9,6 +9,7 @@ using WebStore.Data;
 using WebStore.Extensions;
 using WebStore.Models;
 using WebStore.Models.ViewModel;
+using WebStore.Utility;
 
 namespace WebStore.Customer.Controllers
 {
@@ -53,7 +54,7 @@ namespace WebStore.Customer.Controllers
         public IActionResult DetailsPost(int id)
         {
             // Создать массив типа Лист и записать в него десериализованные данные из сессии
-            List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>("sShoppingCart");
+            List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>(SD.SessionKey);
 
             // Проверяем, если наш созданный лист равен null, то создаём новый экземпляр
             if (listOfShoppingCart is null)
@@ -63,7 +64,7 @@ namespace WebStore.Customer.Controllers
             listOfShoppingCart.Add(id);
 
             // Сериализуем и записываем в сессию лист с ID товаров
-            HttpContext.Session.Set("sShoppingCart", listOfShoppingCart);
+            HttpContext.Session.Set(SD.SessionKey, listOfShoppingCart);
 
             // Переадресовываем пользователя на страницу Index
             return RedirectToAction(nameof(Index));
@@ -71,7 +72,7 @@ namespace WebStore.Customer.Controllers
         public IActionResult Remove(int id)
         {
             // Создать массив типа Лист и записать в него десериализованные данные из сессии
-            List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>("sShoppingCart");
+            List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>(SD.SessionKey);
 
             // Check, if arrays count > 0
             if (listOfShoppingCart.Count > 0)
@@ -81,7 +82,7 @@ namespace WebStore.Customer.Controllers
                     listOfShoppingCart.Remove(id);             
             }
             // Update session data
-            HttpContext.Session.Set("sShoppingCart", listOfShoppingCart);
+            HttpContext.Session.Set(SD.SessionKey, listOfShoppingCart);
 
             // Add SM message
             TempData["SM"] = "Product has been removed successfully!";

@@ -1,0 +1,33 @@
+﻿
+@model  WebStore.Models.ViewModel.ShoppingCartViewModel
+
+@{
+    ViewData["Title"] = "AppointmentConfirmation";
+}
+
+    <div class="container">
+        <div class="row">           
+          <h4 class=" text-info">Appointment Confirmation</h4>            
+        </div>
+        <div class="row form-group">
+            <h7 class="col-9">Your appointment has been submitted.Please feel free to contact us anytime you have any questions</h7>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row form-group">
+            <h5 class="mt-1 text-success">Appointment Details</h5>           
+            <partial name="_AppointmentCustomerDetailsPartial" model="Model.Appointment"/>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row form-group">
+            <partial name="_AppointmentProductDetailsPartial" model="Model.Products"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-success" asp-action="Index">Back to Products</a>
+    </div>
+
+
