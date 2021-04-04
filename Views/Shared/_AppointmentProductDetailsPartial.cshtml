@@ -6,10 +6,10 @@
     <thead class="text-center table-info">
         <tr>
             <th style="width:20%"></th>
-            <th>@Model.FirstOrDefault().Name</th>
-            <th>@Model.FirstOrDefault().Price</th>
-            <th>@Model.FirstOrDefault().ShadeColor</th>
-            <th>@Model.FirstOrDefault().ProductTypes.Name</th>
+            <th><label asp-for="@Model.FirstOrDefault().Name"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault().Price"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault().ShadeColor"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault().ProductTypes.Name"></label></th>
         </tr>
     </thead>
     <tbody>
