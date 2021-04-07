@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using WebStore.Models;
+using WebStore.Utility;
 
 namespace WebStore.Areas.Identity.Pages.Account
 {
@@ -85,10 +87,21 @@ namespace WebStore.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+            
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, Name = Input.Name, PhoneNumber = Input.PhoneNumber };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    if (!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
+                        await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
+                    if (!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
+                        await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
+
+                    if  (Input.IsSuperAdmin)
+                        await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
+                    else
+                        await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
