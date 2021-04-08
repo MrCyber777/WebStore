@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using WebStore.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebStore.Areas.Admin.Controllers
 {
+    [Authorize(Roles =SD.SuperAdminEndUser)]
     [Area(nameof(Admin))]
     public class ProductsController : Controller
     {

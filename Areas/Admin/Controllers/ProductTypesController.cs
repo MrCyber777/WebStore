@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Models;
+using WebStore.Utility;
 
 namespace WebStore.Areas.Admin.Controllers
 {
+    [Authorize(Roles =SD.SuperAdminEndUser)]
     [Area(nameof(Admin))]
     public class ProductTypesController : Controller
     {
