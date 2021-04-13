@@ -1,0 +1,69 @@
+﻿@model WebStore.Models.ViewModel.AppointmentViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+@if (TempData["SM"] != null)
+{
+    <div class="row text-center">
+        <div class="col-12 alert alert-success">
+            @TempData["SM"]
+        </div>
+    </div>
+}
+<form method="get">
+    <div class="row">
+        <h1 class="text-info">Appointment List</h1>
+    </div>
+    <div class="row my-3">
+        <div class="col">
+            <input type="text" class="form-control" name="searchKey" placeholder="Type name, Email or Phone for search..." />
+        </div>
+        <div class="col-3">
+            <button type="submit" class="btn btn-primary form-control">Search</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped border">
+                <thead class="table-info">
+                    <tr>
+                        <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().AppointmentDay)</th>
+                        <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().CustomerName)</th>
+                        <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().CustomerPhoneNumber)</th>
+                        <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().CustomerEmail)</th>
+                        <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().IsConfirmed)</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Appointments)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(x => item.AppointmentDay)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.CustomerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.CustomerPhoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.CustomerEmail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.IsConfirmed)
+                            </td>
+                            <td>
+                                <partial name="_TableButtonPartial" model="item.Id" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+

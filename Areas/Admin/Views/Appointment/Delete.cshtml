@@ -1,0 +1,70 @@
+﻿@model WebStore.Models.Appointment
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="mt-1 text-info">Delete appointment</h1>
+<form method="post" asp-action="Delete">
+    <div class="p-4 border rounded">
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="AppointmentDay"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="AppointmentDay" class="form-control" disabled />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerName"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerName" class="form-control" disabled />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerPhoneNumber"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerPhoneNumber" class="form-control" disabled />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerEmail"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerEmail" class="form-control" disabled />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerPhoneNumber"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerPhoneNumber" class="form-control" disabled />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="IsConfirmed"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="IsConfirmed" class="form-control" style="width: 15px" disabled />
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <input type="submit" asp-route-id="@Model.Id" class="btn btn-danger" value="Delete" />
+            <a class="btn btn-success" asp-action="Index">Back to list</a>
+        </div>
+    </div>
+</form>
+

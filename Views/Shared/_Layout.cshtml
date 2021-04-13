@@ -43,6 +43,12 @@
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="AdminUsers" asp-action="Index">Admin Users</a>
                             </li>
                         }
+                        @if (User.IsInRole(SD.SuperAdminEndUser) || User.IsInRole(SD.AdminEndUser))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Appointment" asp-action="Index">Appointments</a>
+                            </li>
+                        }
 
                         @if (!User.IsInRole(SD.SuperAdminEndUser))
                         {

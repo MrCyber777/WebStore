@@ -1,0 +1,60 @@
+﻿@model WebStore.Models.Appointment
+@{
+    ViewData["Title"] = "Details";
+}
+<h1 class="mt-1 text-info">Appointment Details</h1>
+
+<div class="p-4 border rounded row">
+    <div class="col-8">
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="AppointmentDay"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="AppointmentDay" class="form-control" readonly />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerName"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerName" class="form-control" readonly />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerPhoneNumber"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerPhoneNumber" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="CustomerEmail"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="CustomerEmail" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <label asp-for="IsConfirmed"></label>
+            </div>
+            <div class="col-7">
+                <input asp-for="IsConfirmed" class="form-control" style="width: 15px" disabled/>
+            </div>
+        </div>
+
+        <div class="form-group">           
+            <a class="btn btn-success" asp-action="Index">Back to list</a>
+        </div>
+
+    </div>
+</div>
+

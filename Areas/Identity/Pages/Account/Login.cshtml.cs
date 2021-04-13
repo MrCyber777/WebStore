@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using WebStore.Utility;
+
 
 namespace WebStore.Areas.Identity.Pages.Account
 {
@@ -90,9 +90,7 @@ namespace WebStore.Areas.Identity.Pages.Account
                     return LocalRedirect(returnUrl);
                    
                 }
-
                 
-
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
