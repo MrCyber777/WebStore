@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Models;
 using WebStore.Models.ViewModel;
+using WebStore.Utility;
 
 namespace WebStore.Areas.Admin
 {
@@ -22,7 +26,29 @@ namespace WebStore.Areas.Admin
         }
         public async Task <IActionResult> Index(string searchKey)
         {
-            appointmentVM.Appointments = await _db.Appointments.ToListAsync();
+            // 1. Получаем объект типа ClaimsPrincipal
+            var currentUser = this.User;
+
+            // 2. Получаем объект идентификации юзера
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+
+            // 3. Получаем доступ к объекту пользователя
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if  (searchKey is null)
+                appointmentVM.Appointments = await _db.Appointments.Include(x => x.SalesPerson).ToListAsync();
+            else
+            {
+                appointmentVM.Appointments = await _db.Appointments.Include(x => x.SalesPerson)
+                                                                   .Where(x => x.CustomerName.ToLower().Contains(searchKey.ToLower()) ||
+                                                                          x.CustomerEmail.Contains(searchKey.ToLower()) ||
+                                                                          x.CustomerPhoneNumber.Contains(searchKey.ToLower())).ToListAsync();
+            }
+
+            if (User.IsInRole(SD.AdminEndUser))
+                appointmentVM.Appointments = appointmentVM.Appointments.Where(x => x.SalesPersonID == claim.Value).ToList();
+
+
             return View(appointmentVM);
         }
         [HttpGet]
@@ -31,11 +57,22 @@ namespace WebStore.Areas.Admin
             if (id == null)
                 return NotFound();
 
-            Appointment appointmentFromDB = await _db.Appointments.FindAsync(id);
-            if (appointmentFromDB == null)
-                return NotFound();
+            var products = (from p in _db.Products
+                            join a in _db.ProductsForAppointments
+                            on p.Id equals a.ProductId
+                            where a.AppointmentId == id
+                            select p).Include("ProductTypes") as IEnumerable<Product>;
 
-            return View(appointmentFromDB);
+            AppointmentDetailsViewModel detailsVM = new()
+            {
+                Appointment = await _db.Appointments.Include(x => x.SalesPerson).FirstOrDefaultAsync(x => x.Id == id),
+                SalesPersons = await _db.ApplicationUsers.ToListAsync(),
+                Products = products.ToList()
+                                                     
+                                                    
+            };
+
+            return View(detailsVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

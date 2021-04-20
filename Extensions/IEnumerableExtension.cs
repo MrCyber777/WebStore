@@ -21,10 +21,15 @@ namespace WebStore.Extensions
                        Selected = item.GetPropertyValue("Id").Equals(selectedValue.ToString())
                    };
         }
-
-       //public static IEnumerable<T>Page<T>(this IList<T>items,int pageNumber,int pageSize)
-       // {
-       //     return items.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-       // }
+        public static IEnumerable<SelectListItem>ToSelectListItem<T>(this IEnumerable<T>items,string selectedValue)
+        {
+            return from item in items
+                   select new SelectListItem
+                   {
+                       Text = item.GetPropertyValue("Name"),
+                       Value = item.GetPropertyValue("Id"),
+                       Selected = item.GetPropertyValue("Id").Equals(selectedValue)
+                   };
+        }
     }
 }

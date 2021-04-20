@@ -27,6 +27,7 @@
             <table class="table table-striped border">
                 <thead class="table-info">
                     <tr>
+                        <th>@Html.DisplayNameFor(x=>x.Appointments.FirstOrDefault().SalesPerson.Name)</th>
                         <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().AppointmentDay)</th>
                         <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().CustomerName)</th>
                         <th>@Html.DisplayNameFor(x => x.Appointments.FirstOrDefault().CustomerPhoneNumber)</th>
@@ -40,6 +41,9 @@
                     @foreach (var item in Model.Appointments)
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(x=>item.SalesPerson.Name)
+                            </td>
                             <td>
                                 @Html.DisplayFor(x => item.AppointmentDay)
                             </td>
