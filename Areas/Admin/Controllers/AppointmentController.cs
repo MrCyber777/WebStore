@@ -67,29 +67,43 @@ namespace WebStore.Areas.Admin
             {
                 Appointment = await _db.Appointments.Include(x => x.SalesPerson).FirstOrDefaultAsync(x => x.Id == id),
                 SalesPersons = await _db.ApplicationUsers.ToListAsync(),
-                Products = products.ToList()
-                                                     
-                                                    
+                Products = products.ToList()                                 
             };
+            detailsVM.Appointment.AppointmentTime = detailsVM.Appointment.AppointmentTime
+                                                   .AddHours(detailsVM.Appointment.AppointmentDay.Hour)
+                                                   .AddMinutes(detailsVM.Appointment.AppointmentDay.Minute);
 
             return View(detailsVM);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Appointment appointment,int id)
+        public async Task<IActionResult> Edit(AppointmentDetailsViewModel detailsVM,int id)
         {
-            if (id != appointment.Id)
+            if (id != detailsVM.Appointment.Id)
                 return NotFound();
             if (!ModelState.IsValid)
-                return View(appointment);
+                return View(detailsVM);
+            detailsVM.Appointment.AppointmentDay = detailsVM.Appointment.AppointmentDay
+                                                            .AddHours(detailsVM.Appointment.AppointmentTime.Hour)
+                                                            .AddMinutes(detailsVM.Appointment.AppointmentTime.Minute);
 
-            Appointment appointmentFromDB = await _db.Appointments.FindAsync(id);
-            appointmentFromDB.AppointmentDay = appointment.AppointmentDay;
-            appointmentFromDB.AppointmentTime = appointment.AppointmentTime;
-            appointmentFromDB.CustomerEmail = appointment.CustomerEmail;
-            appointmentFromDB.CustomerName = appointment.CustomerName;
-            appointmentFromDB.CustomerPhoneNumber = appointment.CustomerPhoneNumber;
-            appointmentFromDB.IsConfirmed = appointment.IsConfirmed;
+            var appointmentFromDB = await _db.Appointments.FindAsync(id);
+            appointmentFromDB.CustomerName = detailsVM.Appointment.CustomerName;
+            appointmentFromDB.CustomerEmail = detailsVM.Appointment.CustomerEmail;
+            appointmentFromDB.CustomerPhoneNumber = detailsVM.Appointment.CustomerPhoneNumber;
+            appointmentFromDB.AppointmentTime = detailsVM.Appointment.AppointmentTime;
+            appointmentFromDB.AppointmentDay = detailsVM.Appointment.AppointmentDay;
+            appointmentFromDB.IsConfirmed = detailsVM.Appointment.IsConfirmed;
+            appointmentFromDB.CustomerSurname = detailsVM.Appointment.CustomerSurname;
+            appointmentFromDB.City = detailsVM.Appointment.City;
+            appointmentFromDB.Country = detailsVM.Appointment.City;
+            appointmentFromDB.Line1 = detailsVM.Appointment.Line1;
+            appointmentFromDB.Zip = detailsVM.Appointment.Zip;
+
+            if(User.IsInRole(SD.SuperAdminEndUser))
+                appointmentFromDB.SalesPersonID = detailsVM.Appointment.SalesPersonID;
+            
+
 
             await _db.SaveChangesAsync();
             TempData["SM"] = $"Appointment  has been edited successfully";
@@ -102,12 +116,25 @@ namespace WebStore.Areas.Admin
         {
             if (id == null)
                 return NotFound();
-            Appointment appointment = await _db.Appointments.FindAsync(id);
 
-            if (appointment == null)
-                return NotFound();
+            var products = (from p in _db.Products
+                            join a in _db.ProductsForAppointments
+                            on p.Id equals a.ProductId
+                            where a.AppointmentId == id
+                            select p).Include("ProductTypes") as IEnumerable<Product>;
 
-            return View(appointment);
+            AppointmentDetailsViewModel detailsVM = new()
+            {
+                Appointment = await _db.Appointments.Include(x => x.SalesPerson).FirstOrDefaultAsync(x => x.Id == id),
+                SalesPersons = await _db.ApplicationUsers.ToListAsync(),
+                Products = products.ToList()
+            };
+            detailsVM.Appointment.AppointmentTime = detailsVM.Appointment.AppointmentTime
+                                                   .AddHours(detailsVM.Appointment.AppointmentDay.Hour)
+                                                   .AddMinutes(detailsVM.Appointment.AppointmentDay.Minute);
+
+
+            return View(detailsVM);
             
         }
         [HttpGet]
@@ -115,18 +142,34 @@ namespace WebStore.Areas.Admin
         {
             if (id == null)
                 return NotFound();
-            Appointment appointmentFromDB = await _db.Appointments.FindAsync(id);
-            if (appointmentFromDB == null)
-                return NotFound();
+            var products = (from p in _db.Products
+                            join a in _db.ProductsForAppointments
+                            on p.Id equals a.ProductId
+                            where a.AppointmentId == id
+                            select p).Include("ProductTypes") as IEnumerable<Product>;
 
-            return View(appointmentFromDB);
+            AppointmentDetailsViewModel detailsVM = new()
+            {
+                Appointment = await _db.Appointments.Include(x => x.SalesPerson).FirstOrDefaultAsync(x => x.Id == id),
+                SalesPersons = await _db.ApplicationUsers.ToListAsync(),
+                Products = products.ToList()
+            };
+            detailsVM.Appointment.AppointmentTime = detailsVM.Appointment.AppointmentTime
+                                                   .AddHours(detailsVM.Appointment.AppointmentDay.Hour)
+                                                   .AddMinutes(detailsVM.Appointment.AppointmentDay.Minute);
+
+            return View(detailsVM);
                 
         }
         [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult>DeletePost(int? id)
         {
+            if (id == null)
+                return NotFound();
+
             Appointment appointmentFromDB = await _db.Appointments.FindAsync(id);
+
             if (appointmentFromDB != null)
             {
                 _db.Appointments.Remove(appointmentFromDB);
@@ -136,7 +179,8 @@ namespace WebStore.Areas.Admin
            
             else            
                 TempData["SM"] = $"Appointment can not be deleted";
-                return RedirectToAction(nameof(Index));            
+
+            return RedirectToAction(nameof(Index));            
         }
     }
 }

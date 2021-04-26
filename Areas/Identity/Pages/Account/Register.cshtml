@@ -1,5 +1,7 @@
 ﻿@page
 @model RegisterModel
+@using WebStore.Utility
+
 @{
     ViewData["Title"] = "Register";
 }
@@ -65,6 +67,7 @@
                     </div>
                 </div>
 
+               
                 <div class="row form-group">
                     <div class="col-sm-6 col-md-3">
                         <label asp-for="Input.IsSuperAdmin"></label>
@@ -73,6 +76,7 @@
                         <input type="checkbox" asp-for="Input.IsSuperAdmin" style="width: 15px" class="form-control" />
                     </div>
                 </div>
+
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
 
@@ -111,7 +115,8 @@
         
     </div>
 
-</form>
+</form>              
+ 
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

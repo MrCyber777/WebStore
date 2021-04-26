@@ -10,7 +10,7 @@ using WebStore.Data;
 namespace WebStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210415171627_AppointmentModelChanged")]
+    [Migration("20210425214542_AppointmentModelChanged")]
     partial class AppointmentModelChanged
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,20 +233,40 @@ namespace WebStore.Data.Migrations
                     b.Property<DateTime>("AppointmentDay")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CustomerEmail")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerPhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerPhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerSurname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Line1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SalesPersonID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Zip")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WebStore.Models;
 
 namespace WebStore.Data
@@ -21,5 +18,6 @@ namespace WebStore.Data
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<ProductsForAppointment> ProductsForAppointments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
     }
 }

@@ -12,6 +12,8 @@ namespace WebStore.Models
 
         [NotMapped]
         public bool IsSuperAdmin { get; set; }
+        [NotMapped]
+        public bool IsUser { get; set; }
 
     }
 }

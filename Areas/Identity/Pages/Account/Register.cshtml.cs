@@ -70,9 +70,12 @@ namespace WebStore.Areas.Identity.Pages.Account
             public string Name { get;  set; }
             [Required]
             [Display(Name="Phone number")]
-            public string PhoneNumber { get; set; }
+            public string PhoneNumber { get; set; }          
             [Display(Name="Super admin")]
             public bool IsSuperAdmin { get; set; }
+            [Display(Name = "User")]
+            public bool IsUser { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -96,9 +99,15 @@ namespace WebStore.Areas.Identity.Pages.Account
                         await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
                     if (!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
                         await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
+                    if (!await _roleManager.RoleExistsAsync(SD.User))
+                        await _roleManager.CreateAsync(new IdentityRole(SD.User));
+                   
 
                     if  (Input.IsSuperAdmin)
                         await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
+                    if (Input.IsUser)
+                        await _userManager.AddToRoleAsync(user, SD.User);
+
                     else
                         await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
 
@@ -123,8 +132,8 @@ namespace WebStore.Areas.Identity.Pages.Account
                     {
                         //await _signInManager.SignInAsync(user, isPersistent: false);
                         //return LocalRedirect(returnUrl);
-                        return RedirectToAction("Index", "AdminUsers", new {  area = "Admin"  });
-                    }
+                        return RedirectToAction("Index", "AdminUsers", new {  area = "Admin"  });                
+                    }                  
                 }
                 foreach (var error in result.Errors)
                 {

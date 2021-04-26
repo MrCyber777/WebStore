@@ -17,7 +17,15 @@
                     <label asp-for="Appointment.AppointmentDay"></label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Appointment.AppointmentDay" class="form-control" />
+                    <input asp-for="Appointment.AppointmentDay" type="date" class="form-control" />
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="Appointment.AppointmentTime"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Appointment.AppointmentTime" type="time" class="form-control" />
                 </div>
             </div>
 
@@ -33,22 +41,51 @@
 
             <div class="row form-group">
                 <div class="col-4">
-                    <label asp-for="Appointment.CustomerPhoneNumber"></label>
+                    <label asp-for="Appointment.CustomerSurname"></label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Appointment.CustomerPhoneNumber" class="form-control" />
+                    <input asp-for="Appointment.CustomerSurname" class="form-control" />
                 </div>
-                <span asp-validation-for="Appointment.CustomerPhoneNumber" class="text-danger"></span>
+                <span asp-validation-for="Appointment.CustomerName" class="text-danger"></span>
             </div>
 
             <div class="row form-group">
                 <div class="col-4">
-                    <label asp-for="Appointment.CustomerEmail"></label>
+                    <label asp-for="Appointment.Line1"></label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Appointment.CustomerEmail" class="form-control" disabled />
+                    <input asp-for="Appointment.Line1" class="form-control" />
+                </div>
+                <span asp-validation-for="Appointment.Line1" class="text-danger"></span>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="Appointment.Zip"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Appointment.Zip" class="form-control" disabled />
                 </div>
             </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="Appointment.City"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Appointment.City" class="form-control" disabled />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <label asp-for="Appointment.Country"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Appointment.Country" class="form-control" disabled />
+                </div>
+            </div>
+
 
             <div class="row form-group">
                 <div class="col-4">
@@ -57,18 +94,19 @@
                 @if (User.IsInRole(SD.SuperAdminEndUser))
                 {
                     <div class="col-8">
-                       
+
                         <select asp-for="Appointment.SalesPersonID" asp-items='Model.SalesPersons.ToSelectListItem(Model.Appointment.SalesPersonID)' class="form-control">
                             <option value="">Select a SalesPerson</option>
                         </select>
                     </div>
                 }
-            else if(User.IsInRole(SD.AdminEndUser))
-            {
-            <div class="col-8">
-                <input asp-for="Appointment.SalesPerson.Name" class="form-control" disabled />
-            </div>
-            }
+                else if (User.IsInRole(SD.AdminEndUser))
+                {
+                    <div class="col-8">
+                        <input type="hidden" asp-for="Appointment.SalesPersonID" />
+                        <input asp-for="Appointment.SalesPerson.Name" class="form-control" disabled />
+                    </div>
+                }
 
             </div>
 

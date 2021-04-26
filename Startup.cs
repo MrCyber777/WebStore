@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Data;
+using WebStore.Models;
 
 namespace WebStore
 {
@@ -36,7 +37,6 @@ namespace WebStore
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
-
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -96,7 +96,8 @@ namespace WebStore
                   name: "areas",
                   template: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
                 );
-            });
+        });
+           
         }
     }
 }

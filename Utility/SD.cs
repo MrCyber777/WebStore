@@ -7,5 +7,6 @@
         public const string SessionKey = "sShoppingCart";
         public const string AdminEndUser = "Admin";
         public const string SuperAdminEndUser = "Super Admin";
+        public const string User = "User";
     }
 }

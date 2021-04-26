@@ -23,6 +23,8 @@ namespace WebStore.Extensions
         }
         public static IEnumerable<SelectListItem>ToSelectListItem<T>(this IEnumerable<T>items,string selectedValue)
         {
+            if (selectedValue is null)
+                selectedValue = "";
             return from item in items
                    select new SelectListItem
                    {
