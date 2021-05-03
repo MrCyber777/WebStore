@@ -42,16 +42,16 @@
                     }
                 </td>
                 <td>
-                    @if(item.LockoutEnd is null || item.LockoutEnd < DateTime.Now)
-                {
-                    <div class=" btn-group" role="group">
-                        <a class="btn btn-primary" href="@HttpUtility.UrlDecode(Url.Action($"Edit/{item.Id}"))"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-danger"href="@HttpUtility.UrlDecode(Url.Action($"Delete/{item.Id}"))"><i class="fas fa-trash"></i></a>
-                    </div>
-                }                    
+                    @if (item.LockoutEnd is null || item.LockoutEnd < DateTime.Now)
+                    {
+                        <div class=" btn-group" role="group">
+                            <a class="btn btn-primary" href="@HttpUtility.UrlDecode(Url.Action($"Edit/{item.Id}"))"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="@HttpUtility.UrlDecode(Url.Action($"Delete/{item.Id}"))"><i class="fas fa-trash"></i></a>
+                        </div>
+                    }
                 </td>
             </tr>
-        }
-    </tbody>
+        }       
+    </tbody>   
 </table>
 

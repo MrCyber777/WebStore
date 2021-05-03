@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Models;
@@ -15,6 +16,7 @@ namespace WebStore.Areas.Admin
     public class AppointmentController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private int _pageSize = 3;
 
         [BindProperty]
         public AppointmentViewModel appointmentVM { get; set; } = new();
@@ -24,7 +26,7 @@ namespace WebStore.Areas.Admin
         {
             _db = db;
         }
-        public async Task <IActionResult> Index(string searchKey)
+        public async Task <IActionResult> Index(string searchKey,int productPage=1)
         {
             // 1. Получаем объект типа ClaimsPrincipal
             var currentUser = this.User;
@@ -34,6 +36,12 @@ namespace WebStore.Areas.Admin
 
             // 3. Получаем доступ к объекту пользователя
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            StringBuilder param = new();
+            param.Append("/Admin/Appointment?productPage=:");
+            param.Append("&searchKey=");
+            if (searchKey is not null)
+                param.Append(searchKey);
 
             if  (searchKey is null)
                 appointmentVM.Appointments = await _db.Appointments.Include(x => x.SalesPerson).ToListAsync();
@@ -47,6 +55,20 @@ namespace WebStore.Areas.Admin
 
             if (User.IsInRole(SD.AdminEndUser))
                 appointmentVM.Appointments = appointmentVM.Appointments.Where(x => x.SalesPersonID == claim.Value).ToList();
+
+            var count = appointmentVM.Appointments.Count;
+            appointmentVM.Appointments = appointmentVM.Appointments.OrderBy(x => x.AppointmentDay)
+                                                                   .Skip((productPage - 1) * _pageSize)
+                                                                   .Take(_pageSize)
+                                                                   .ToList();
+
+            appointmentVM.PaginationInfo = new()
+            {
+                CurrentPage = productPage,
+                ItemPerPage = _pageSize,
+                TotalItems = count,
+                UrlParam = param.ToString()
+            };
 
 
             return View(appointmentVM);

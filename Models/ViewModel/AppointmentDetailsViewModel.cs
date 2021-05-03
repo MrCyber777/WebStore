@@ -8,5 +8,6 @@ namespace WebStore.Models.ViewModel
         public Appointment Appointment { get; set; }
         public List<Product> Products { get; set; }
         public List<ApplicationUser> SalesPersons { get; set; }
+       
     }
 }

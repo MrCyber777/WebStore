@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Models;
@@ -13,13 +14,16 @@ namespace WebStore.Areas.Admin.Controllers
     public class ProductTypesController : Controller
     {
         // Database dependency injection
-        private readonly ApplicationDbContext _db;  
+        private readonly ApplicationDbContext _db;
+       
+     
         public ProductTypesController(ApplicationDbContext db) 
         {
             _db = db;
         }
         public IActionResult Index()
         {
+           
             //List<ProductTypes> productTypesList = _db.ProductsTypes.ToList(); //  Get all  types of products from the database
             return View(_db.ProductsTypes.ToList());
         }

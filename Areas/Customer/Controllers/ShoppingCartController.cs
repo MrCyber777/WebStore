@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Extensions;
@@ -16,6 +17,7 @@ namespace WebStore.Areas.Customer.Controllers
     public class ShoppingCartController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private int _pageSize = 3;
         [BindProperty]
         public ShoppingCartViewModel ShoppingCartVM { get; set; }
         public ShoppingCartController(ApplicationDbContext db)
@@ -27,8 +29,13 @@ namespace WebStore.Areas.Customer.Controllers
             };
         }
         [HttpGet]
-        public async Task <IActionResult> Index()
+        public async Task <IActionResult> Index(int productPage = 1)
         {
+            StringBuilder param = new();
+            param.Append("/Customer/ShoppingCart?productPage=:");
+          
+
+
             List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>(SD.SessionKey);
 
             if (listOfShoppingCart.Count > 0)
@@ -42,6 +49,21 @@ namespace WebStore.Areas.Customer.Controllers
                    ShoppingCartVM.Products.Add(product);
                 }              
             }
+            var count = ShoppingCartVM.Products.Count;
+            ShoppingCartVM.Products = ShoppingCartVM.Products.OrderBy(x => x.Name)
+                                                           .Skip((productPage - 1) * _pageSize)
+                                                           .Take(_pageSize)
+                                                           .ToList();
+
+            ShoppingCartVM.PaginationInfo = new()
+            {
+                CurrentPage = productPage,
+                ItemPerPage = _pageSize,
+                TotalItems = count,
+                UrlParam = param.ToString()
+            };
+
+
             return View(ShoppingCartVM);
         }
         [HttpPost]

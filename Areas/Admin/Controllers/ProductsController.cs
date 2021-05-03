@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using WebStore.Utility;
 using Microsoft.AspNetCore.Authorization;
+using System.Text;
 
 namespace WebStore.Areas.Admin.Controllers
 {
@@ -18,6 +19,8 @@ namespace WebStore.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _hostingEnvironment;
+    
+
 
         [BindProperty]// Привязывает свойство к Post методам всего контроллера ( не требует передачи через параметр ) 
 
@@ -37,6 +40,7 @@ namespace WebStore.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
+                      
             var products = _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);
             return View(await products.ToListAsync());
         }

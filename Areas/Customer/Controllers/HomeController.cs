@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Extensions;
@@ -16,7 +17,8 @@ namespace WebStore.Customer.Controllers
     [Area(nameof(Customer))]
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _db;      
+        private readonly ApplicationDbContext _db;
+       
 
         [BindProperty]
         public ProductsViewModel productsVM { get; set; }
@@ -32,6 +34,7 @@ namespace WebStore.Customer.Controllers
         }
         public async Task<IActionResult> Index()
         {
+           
             var productList = await _db.Products.ToListAsync();
             return View(productList);
         }

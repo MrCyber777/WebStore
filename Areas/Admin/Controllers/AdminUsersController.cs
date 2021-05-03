@@ -14,12 +14,14 @@ namespace WebStore.Areas.Admin.Controllers
     public class AdminUsersController : Controller
     {
         private readonly ApplicationDbContext _db;
+       
         public AdminUsersController(ApplicationDbContext db)
         {
             _db = db;
         }
         public async Task <IActionResult> Index()
         {
+            
 
             return View(await _db.ApplicationUsers.ToListAsync());
         }

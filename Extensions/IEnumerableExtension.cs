@@ -33,5 +33,6 @@ namespace WebStore.Extensions
                        Selected = item.GetPropertyValue("Id").Equals(selectedValue)
                    };
         }
+
     }
 }
