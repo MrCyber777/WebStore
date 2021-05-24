@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebStore.Data;
 using WebStore.Models;
@@ -15,8 +14,7 @@ namespace WebStore.Areas.Admin.Controllers
     {
         // Database dependency injection
         private readonly ApplicationDbContext _db;
-       
-     
+           
         public ProductTypesController(ApplicationDbContext db) 
         {
             _db = db;
@@ -55,9 +53,7 @@ namespace WebStore.Areas.Admin.Controllers
             TempData["SM"] = $"Product type: {productType.Name} added successfully ";
 
             // 1.4 Переадресовываем пользователя на страницу Index
-            return RedirectToAction(nameof(Index));
-
-            
+            return RedirectToAction(nameof(Index));           
         }
         //GET:Admin/ProductTypes/Edit
         [HttpGet]
@@ -88,7 +84,6 @@ namespace WebStore.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
             TempData["SM"] = $"Product type: {productType.Name} edited successfully ";
             return RedirectToAction(nameof(Index));           
-
         }
         [HttpGet]
         public async Task<IActionResult>Details(int? id)

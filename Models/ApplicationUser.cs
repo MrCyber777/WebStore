@@ -9,6 +9,7 @@ namespace WebStore.Models
         [MaxLength(30)]
         [Display(Name="Sales person")]        
         public string Name { get; set; }
+        
 
         [NotMapped]
         public bool IsSuperAdmin { get; set; }

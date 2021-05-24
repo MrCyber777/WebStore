@@ -78,7 +78,6 @@ namespace WebStore.Areas.Admin.Controllers
             if (specialTag == null)
                 return NotFound();
             return View(specialTag);
-
         }
         [HttpGet]
         public async Task<IActionResult>Delete(int? id)

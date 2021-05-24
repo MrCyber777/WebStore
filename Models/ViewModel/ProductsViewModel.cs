@@ -7,11 +7,7 @@ namespace WebStore.Models.ViewModel
     {
         public Product Products { get; set; }       
         public IEnumerable<ProductTypes> ProductTypes { get; set; }
-        public IEnumerable<SpecialTag> SpecialTags { get; set; }
-        public PageInfo PaginationInfo { get; set; }
-
-
-
+        public IEnumerable<SpecialTag> SpecialTags { get; set; }     
 
     }
 }

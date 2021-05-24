@@ -1,9 +1,11 @@
-﻿@model IEnumerable<WebStore.Models.ApplicationUser>
+﻿@*@model IEnumerable<WebStore.Models.ApplicationUser>*@
+@model WebStore.Models.ViewModel.AdminUsersListViewModel
 @using System.Web
 @{
     ViewData["Title"] = "Index";
 
 }
+
 <div class="row">
     <div class="col-6">
         <h2 class="text-info">Admin Users List</h2>
@@ -23,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.ApplicationUsers)
         {
             <tr>
                 <td>
@@ -51,7 +53,9 @@
                     }
                 </td>
             </tr>
-        }       
-    </tbody>   
+        }
+    </tbody>
 </table>
+<div page-model="@Model.PaginationInfo" page-action="Index" page-classes-enabled="true" page-class="btn border" page-class-normal="btn btn-default active" page-class-selected="btn btn-primary active" class="btn-group m-1">
+</div>
 

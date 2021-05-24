@@ -1,6 +1,4 @@
 ﻿
-using Microsoft.AspNetCore.Authentication;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebStore.Models.ViewModel
@@ -20,6 +18,8 @@ namespace WebStore.Models.ViewModel
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+        [Required]
+        public string Address { get; set; }
         [Required]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         [DataType(DataType.Password)]

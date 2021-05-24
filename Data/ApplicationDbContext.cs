@@ -18,6 +18,15 @@ namespace WebStore.Data
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<ProductsForAppointment> ProductsForAppointments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ClientUser> ClientUsers { get; set; }
+        public DbSet<IPBlackList>IPBlackLists { get; set; }
+        public DbSet<MacBlackList>MacBlackLists { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ClientUser>().HasIndex(x=>x.IP).IsUnique();
+        }
+
 
     }
 }

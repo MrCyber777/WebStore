@@ -19,8 +19,7 @@ namespace WebStore.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _hostingEnvironment;
-    
-
+        private int _pageSize = 3;
 
         [BindProperty]// Привязывает свойство к Post методам всего контроллера ( не требует передачи через параметр ) 
 
@@ -38,11 +37,29 @@ namespace WebStore.Areas.Admin.Controllers
                 SpecialTags = _db.SpecialTags.ToList()
             };
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int productPage = 1)
         {
-                      
-            var products = _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);
-            return View(await products.ToListAsync());
+            StringBuilder param = new();
+            param.Append("/Admin/Products?productPage=:");
+            ProductListViewModel productsVM = new();
+            productsVM.Products = await _db.Products.ToListAsync();
+                 var count = productsVM.Products.Count;
+            productsVM.Products = productsVM.Products.OrderBy(x => x.Name)
+                                                   .Skip((productPage - 1) * _pageSize)
+                                                   .Take(_pageSize)
+                                                   .ToList();
+
+
+            var products = _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);          
+            productsVM.PaginationInfo = new()
+            {
+                CurrentPage = productPage,
+                ItemPerPage = _pageSize,
+                TotalItems = count,
+                UrlParam = param.ToString()
+            };
+
+            return View(productsVM/*await products.ToListAsync()*/);
         }
         //GET:Admin/Products/Create
         [HttpGet]
@@ -145,7 +162,6 @@ namespace WebStore.Areas.Admin.Controllers
                 return View(productsVM);
 
 
-
             string webRootPath = _hostingEnvironment.WebRootPath;
             var files = HttpContext.Request.Form.Files;
 
@@ -163,7 +179,6 @@ namespace WebStore.Areas.Admin.Controllers
                 {
                     await files[0].CopyToAsync(fileStream);
                 }
-
 
                 productsVM.Products.Image = $"\\{SD.ImageFolder}\\{productsVM.Products.Id}{extension}";
             }

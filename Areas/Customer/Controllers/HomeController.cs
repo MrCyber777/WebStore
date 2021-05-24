@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +17,11 @@ namespace WebStore.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
-       
+        private int _pageSize = 3;
 
         [BindProperty]
         public ProductsViewModel productsVM { get; set; }
+
         public HomeController(ApplicationDbContext db)
         {
             _db = db;
@@ -32,11 +32,31 @@ namespace WebStore.Customer.Controllers
                 SpecialTags = _db.SpecialTags.ToList()
             };
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int productPage = 1)
         {
-           
-            var productList = await _db.Products.ToListAsync();
-            return View(productList);
+            StringBuilder param = new();
+            param.Append("/Customer/Home?productPage=:");
+
+            //var productList = await _db.Products.ToListAsync();
+            ProductListViewModel productsVM = new();
+            productsVM.Products = await _db.Products.ToListAsync();
+
+            var count = productsVM.Products.Count;
+            productsVM.Products = productsVM.Products.OrderBy(x => x.Name)
+                                                   .Skip((productPage - 1) * _pageSize)
+                                                   .Take(_pageSize)
+                                                   .ToList();
+
+            productsVM.PaginationInfo = new()
+            {
+                CurrentPage=productPage,
+                ItemPerPage=_pageSize,
+                TotalItems=count,
+                UrlParam=param.ToString()
+            };
+
+
+            return View(productsVM);
         }
       
         [HttpGet]

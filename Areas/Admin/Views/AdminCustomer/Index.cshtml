@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WebStore.Models.ClientUser>
+@{
+    ViewData["Title"] = "Index";
+}
+@if (TempData["SM"] != null)
+{
+    <div class="row text-center">
+        <div class="col-12 alert alert-success">
+            @TempData["SM"]
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-info"> Users List</h2>
+    </div>
+</div>
+<table class="table table-striped border">
+    <thead>
+        <tr class="table-info">
+            <th>Name</th>
+            <th>IP</th>
+            <th>MAC</th>
+            <th>Banned</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(x => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.IP)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.UserMac)
+                </td>
+                <td>
+                    @if (item.LockoutEnd.HasValue)
+                    {
+                        @item.LockoutEnd.Value.ToString("dd.MM.yyyy");
+                    }
+                </td>
+                <td><a asp-action="BanByIp" asp-route-id="@item.Id" class="btn btn-danger">Ban IP</a></td>
+                <td><a asp-action="BanByMac" asp-route-id="@item.Id" class="btn btn-danger">Ban MAC</a></td>
+                <td>@*TODO:Ban 3 days*@</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

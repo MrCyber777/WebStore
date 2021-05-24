@@ -34,8 +34,6 @@ namespace WebStore.Areas.Customer.Controllers
             StringBuilder param = new();
             param.Append("/Customer/ShoppingCart?productPage=:");
           
-
-
             List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>(SD.SessionKey);
 
             if (listOfShoppingCart.Count > 0)
@@ -62,7 +60,6 @@ namespace WebStore.Areas.Customer.Controllers
                 TotalItems = count,
                 UrlParam = param.ToString()
             };
-
 
             return View(ShoppingCartVM);
         }

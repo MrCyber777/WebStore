@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebStore.Models.Product>
+﻿@*@model IEnumerable<WebStore.Models.Product>*@
+@model WebStore.Models.ViewModel.ProductListViewModel
 @using System
 
 @{
@@ -34,7 +35,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Products)
             {
                 <tr>
                     <td>
@@ -59,5 +60,7 @@
             }
         </tbody>
     </table>
+</div>
+<div page-model="@Model.PaginationInfo" page-action="Index" page-classes-enabled="true" page-class="btn border" page-class-normal="btn btn-default active" page-class-selected="btn btn-primary active" class="btn-group m-1">
 </div>
 

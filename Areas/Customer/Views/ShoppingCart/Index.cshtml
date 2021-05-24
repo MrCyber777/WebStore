@@ -50,123 +50,108 @@
                         </tbody>
                     </table>
                 </div>
+                <div page-model="@Model.PaginationInfo" page-action="Index" page-classes-enabled="true" page-class="btn border" page-class-normal="btn btn-default active" page-class-selected="btn btn-primary active" class="btn-group m-1">
+                </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-auto offset-1">
-                        <label>
-                            Name:
-                        </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-1">
+            <div class="row">
+                <div class="col-4 pb-3">
+                    <div class="form-group">
+                        <label>Name:</label>
                         <input asp-for="@Model.Appointment.CustomerName" class="form-control" />
                     </div>
                 </div>
 
-
-                <div class="row">
-                    <div class="col-auto offset-3">
-                        <label>
-                            Surname:
-                        </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Surname:</label>
                         <input asp-for="@Model.Appointment.CustomerSurname" class="form-control" />
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-auto offset-4">
-                        <label>
-                            Phone Number:
-                        </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-4">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Phone Number:</label>
                         <input asp-for="@Model.Appointment.CustomerPhoneNumber" class="form-control" />
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-auto offset-1">
-                        <label>
-                            Email:
-                        </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-1">
+
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Email:</label>
                         <input asp-for="@Model.Appointment.CustomerEmail" class="form-control" />
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-auto offset-3">
+                <div class="col-4">
+                    <div class="form-group">
                         <label>
                             Appointment Day:
                         </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-3">
                         <input asp-for="@Model.Appointment.AppointmentDay" type="date" class="form-control" />
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-auto offset-4 ">
+                <div class="col-4">
+                    <div class="form-group">
                         <label>
                             Appointment Time:
                         </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-4">
                         <input asp-for="@Model.Appointment.AppointmentTime" type="time" min="08:00" max="18:00" class="form-control" />
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-auto offset-1 ">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
                         <label>
                             Address:
                         </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-1">
                         <input asp-for="@Model.Appointment.Line1" class="form-control" />
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-auto offset-4">
+
+                <div class="col-4">
+                    <div class="form-group">
                         <label>
                             Zip:
                         </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-3">
                         <input asp-for="@Model.Appointment.Zip" class="form-control" />
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-auto offset-6">
+
+                <div class="col-4">
+                    <div class="form-group">
                         <label>
                             City:
                         </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-6">
                         <input asp-for="@Model.Appointment.City" class="form-control" />
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-
-                    <div class="col-auto offset-1">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
                         <label>
                             Country:
                         </label>
-                    </div>
-                    <div class="col-auto pb-3 offset-1">
                         <input asp-for="@Model.Appointment.Country" class="form-control" />
                     </div>
                 </div>
-
-                <div class="col-12">
-                    <button type="submit" id="btnPlaceOrder" class="btn btn-success">Schedule Appointment</button>
+                <div class="col-4 offset-4">                  
+                    <button type="submit" id="btnPlaceOrder" class="btn btn-success form-control mt-4">Schedule Appointment</button>
                 </div>
             </div>
+
+
+
         </div>
     }
 
@@ -174,6 +159,5 @@
     {
         <div class="alert alert-danger text-center">No items added to the shopping cart...</div>
     }
-    <div page-model="@Model.PaginationInfo" page-action="Index" page-classes-enabled="true" page-class="btn border" page-class-normal="btn btn-default active" page-class-selected="btn btn-primary active" class="btn-group m-1">
-    </div>
+  
 </form>

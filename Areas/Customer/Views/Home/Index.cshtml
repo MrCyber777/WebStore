@@ -1,10 +1,10 @@
-﻿@model List<WebStore.Models.Product>
+﻿@model WebStore.Models.ViewModel.ProductListViewModel
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (var item in Model.Products)
     {
         <div class="col-4">
             <div class="card  mb-4">
@@ -26,6 +26,8 @@
             </div>
         </div>
     }
+</div>
+<div page-model="@Model.PaginationInfo" page-action="Index" page-classes-enabled="true" page-class="btn border" page-class-normal="btn btn-default active" page-class-selected="btn btn-primary active" class="btn-group m-1">
 </div>
 
 
