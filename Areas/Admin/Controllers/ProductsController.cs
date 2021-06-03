@@ -1,29 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebStore.Data;
-using WebStore.Models.ViewModel;
-using WebStore.Models;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
-using WebStore.Utility;
-using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using WebStore.Data;
+using WebStore.Models;
+using WebStore.Models.ViewModel;
+using WebStore.Utility;
 
 namespace WebStore.Areas.Admin.Controllers
 {
-    [Authorize(Roles =SD.SuperAdminEndUser)]
+    [Authorize(Roles = SD.SuperAdminEndUser)]
     [Area(nameof(Admin))]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private int _pageSize = 3;
-
-        [BindProperty]// Привязывает свойство к Post методам всего контроллера ( не требует передачи через параметр ) 
-
-        public ProductsViewModel productsVM { get; set; }
+        //private int _pageSize = 3;
 
         public ProductsController(ApplicationDbContext db, IWebHostEnvironment hostingEnvironment)
         {
@@ -37,36 +33,17 @@ namespace WebStore.Areas.Admin.Controllers
                 SpecialTags = _db.SpecialTags.ToList()
             };
         }
-        public async Task<IActionResult> Index(int productPage = 1)
-        {
-            StringBuilder param = new();
-            param.Append("/Admin/Products?productPage=:");
-            ProductListViewModel productsVM = new();
-            productsVM.Products = await _db.Products.ToListAsync();
-                 var count = productsVM.Products.Count;
-            productsVM.Products = productsVM.Products.OrderBy(x => x.Name)
-                                                   .Skip((productPage - 1) * _pageSize)
-                                                   .Take(_pageSize)
-                                                   .ToList();
 
+        [BindProperty]// Привязывает свойство к Post методам всего контроллера ( не требует передачи через параметр )
+        public ProductsViewModel productsVM { get; set; }
 
-            var products = _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);          
-            productsVM.PaginationInfo = new()
-            {
-                CurrentPage = productPage,
-                ItemPerPage = _pageSize,
-                TotalItems = count,
-                UrlParam = param.ToString()
-            };
-
-            return View(productsVM/*await products.ToListAsync()*/);
-        }
         //GET:Admin/Products/Create
         [HttpGet]
         public IActionResult Create()
         {
             return View(productsVM);
         }
+
         [HttpPost]
         [ActionName("Create")]
         [ValidateAntiForgeryToken]
@@ -130,8 +107,65 @@ namespace WebStore.Areas.Admin.Controllers
 
             // Переадресовываем пользователя на страницу Index
             return RedirectToAction(nameof(Index));
-
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+            productsVM.Products = await _db.Products.Include(x => x.ProductTypes)
+                                                    .Include(x => x.SpecialTags)
+                                                    .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (productsVM.Products == null)
+                return NotFound();
+
+            return View(productsVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete()
+        {
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            Product productFromDb = await _db.Products.FirstOrDefaultAsync(x => x.Id == productsVM.Products.Id);
+
+            if (productFromDb == null)
+                return NotFound();
+            else
+            {
+                string uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
+                string extension = Path.GetExtension(productFromDb.Image);
+                if (System.IO.File.Exists(uploadPath + productFromDb.Id + extension))
+                    System.IO.File.Delete(uploadPath + productFromDb.Id + extension);
+                _db.Products.Remove(productFromDb);
+            }
+            await _db.SaveChangesAsync();
+            TempData["SM"] = $"Product{productsVM.Products.Name} has been deleted successfully";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
+            var result = await GetProducts(id);
+            if (result)
+                return View(productsVM);
+
+            return NotFound();
+            //productsVM.Products = await _db.Products
+            //                             .Include(x => x.ProductTypes)
+            //                             .Include(x => x.SpecialTags)
+            //                             .FirstOrDefaultAsync(x => x.Id == id);
+            //if (productsVM.Products == null)
+            //    return NotFound();
+
+            //return View(productsVM);
+        }
+
         //GET: Admin/Products/Edit
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -140,6 +174,27 @@ namespace WebStore.Areas.Admin.Controllers
             if (id is null)
                 return NotFound();
 
+            var result = await GetProducts(id);
+
+            if (result)
+                return View(productsVM);
+
+            return NotFound();
+            //// 2. Заполняем ViewModel данными из базы
+            //productsVM.Products = await _db.Products
+            //                               .Include(x => x.ProductTypes)
+            //                               .Include(x => x.SpecialTags)
+            //                               .FirstOrDefaultAsync(x => x.Id == id);
+
+            //// 3. Проверяем, найдены ли данные или получен null
+            //if (productsVM.Products is null)
+            //    return NotFound();
+
+            // 4. Если данные найдены, возвращаем модель в представление
+
+        }
+        private async Task<bool> GetProducts(int? id)
+        {
             // 2. Заполняем ViewModel данными из базы
             productsVM.Products = await _db.Products
                                            .Include(x => x.ProductTypes)
@@ -148,11 +203,11 @@ namespace WebStore.Areas.Admin.Controllers
 
             // 3. Проверяем, найдены ли данные или получен null
             if (productsVM.Products is null)
-                return NotFound();
+                return false;
 
-            // 4. Если данные найдены, возвращаем модель в представление
-            return View(productsVM);
+            return true;
         }
+
         //POST:Admin/Products/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -160,7 +215,6 @@ namespace WebStore.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
                 return View(productsVM);
-
 
             string webRootPath = _hostingEnvironment.WebRootPath;
             var files = HttpContext.Request.Form.Files;
@@ -192,61 +246,35 @@ namespace WebStore.Areas.Admin.Controllers
             productFromDb.ProductTypeId = productsVM.Products.ProductTypeId;
             productFromDb.SpecialTagId = productsVM.Products.SpecialTagId;
 
-
             await _db.SaveChangesAsync();
 
             TempData["SM"] = $"Product {productsVM.Products.Name} has been changed successfully";
 
             return RedirectToAction(nameof(Index));
         }
-        [HttpGet]
-        public async Task<IActionResult> Details(int? id)
+
+        public async Task<IActionResult> Index(int productPage = 1)
         {
-            if (id == null)
-                return NotFound();
-            productsVM.Products = await _db.Products
-                                         .Include(x => x.ProductTypes)
-                                         .Include(x => x.SpecialTags)
-                                         .FirstOrDefaultAsync(x => x.Id == id);
-            if (productsVM.Products == null)
-                return NotFound();
+            StringBuilder param = new();
+            param.Append("/Admin/Products?productPage=:");
+            ProductListViewModel productsVM = new();
+            productsVM.Products = await _db.Products.ToListAsync();
+            var count = productsVM.Products.Count;
+            productsVM.Products = productsVM.Products.OrderBy(x => x.Name)
+                                                   .Skip((productPage - 1) * SD.PageSize)
+                                                   .Take(SD.PageSize)
+                                                   .ToList();
 
-            return View(productsVM);
-        }
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-                return NotFound();
-            productsVM.Products = await _db.Products.Include(x => x.ProductTypes)
-                                                    .Include(x => x.SpecialTags)
-                                                    .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (productsVM.Products == null)
-                return NotFound();
-
-            return View(productsVM);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete()
-        {
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            Product productFromDb = await _db.Products.FirstOrDefaultAsync(x => x.Id == productsVM.Products.Id);
-
-            if (productFromDb == null)
-                return NotFound();
-            else
+            var products = _db.Products.Include(x => x.ProductTypes).Include(x => x.SpecialTags);
+            productsVM.PaginationInfo = new()
             {
-                string uploadPath = Path.Combine(webRootPath, SD.ImageFolder);
-                string extension = Path.GetExtension(productFromDb.Image);
-                if (System.IO.File.Exists(uploadPath + productFromDb.Id + extension))
-                    System.IO.File.Delete(uploadPath + productFromDb.Id + extension);
-                _db.Products.Remove(productFromDb);
-            }
-            await _db.SaveChangesAsync();
-            TempData["SM"] = $"Product{productsVM.Products.Name} has been deleted successfully";
-            return RedirectToAction(nameof(Index));
+                CurrentPage = productPage,
+                ItemPerPage = SD.PageSize,
+                TotalItems = count,
+                UrlParam = param.ToString()
+            };
+
+            return View(productsVM/*await products.ToListAsync()*/);
         }
     }
 }

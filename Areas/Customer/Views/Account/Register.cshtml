@@ -1,5 +1,4 @@
-﻿
-@model WebStore.Models.ViewModel.RegisterViewModel 
+﻿@model WebStore.Models.ViewModel.RegisterViewModel
 @{
     ViewData["Title"] = "Register";
 }
@@ -29,7 +28,6 @@
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger text-center"></span>
                     </div>
-
                 </div>
 
                 <div class="row form-group">
@@ -50,7 +48,6 @@
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger text-center"></span>
                     </div>
-
                 </div>
 
                 <div class="row form-group">
@@ -69,21 +66,19 @@
                 <section>
                     <h4>Use another service to register.</h4>
                     <hr />
-                                    
-                            <div>
-                                <p>
-                                    There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                                    for details on setting up this ASP.NET application to support logging in via external services.
-                                </p>
-                            </div>                    
+
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                            for details on setting up this ASP.NET application to support logging in via external services.
+                        </p>
+                    </div>
                 </section>
             </div>
         </div>
     </div>
 </form>
 
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-

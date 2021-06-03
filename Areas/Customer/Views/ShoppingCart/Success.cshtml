@@ -1,0 +1,92 @@
+﻿@model PayPalResponse
+@{
+    ViewData["Title"] = "Success";
+}
+<h1 class="mt-1 text-info">Payment Details</h1>
+<form method="post">
+    <div class="container border border-secondary rounded p-3">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-4 pb-3">
+                    <div class="form-group">
+                        <label>GrossTotal:</label>
+                        <input asp-for="GrossTotal" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Invoice number:</label>
+                        <input asp-for="InvoiceNumber" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>PaymentStatus</label>
+                        <input asp-for="PaymentStatus" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4 pb-3">
+                    <div class="form-group">
+                        <label>PayerFirstName:</label>
+                        <input asp-for="PayerFirstName" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>PaymentFee:</label>
+                        <input asp-for="PaymentFee" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Business email:</label>
+                        <input asp-for="BusinessEmail" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4 pb-3">
+                    <div class="form-group">
+                        <label>PayerEmail:</label>
+                        <input asp-for="PayerEmail" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>PayerLastName:</label>
+                        <input asp-for="PayerLastName" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Receiver email:</label>
+                        <input asp-for="ReceiverEmail" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Currency:</label>
+                        <input asp-for="Currency" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group my-1">
+        <a asp-action="Index" class="btn btn-success">Back to List</a>
+    </div>
+</form>

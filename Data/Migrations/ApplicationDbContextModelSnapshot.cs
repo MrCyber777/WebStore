@@ -309,6 +309,63 @@ namespace WebStore.Data.Migrations
                     b.ToTable("MacBlackLists");
                 });
 
+            modelBuilder.Entity("WebStore.Models.PayPalResponse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BusinessEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Custom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("GrossTotal")
+                        .HasColumnType("float");
+
+                    b.Property<int>("InvoiceNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayerFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayerLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PaymentFee")
+                        .HasColumnType("float");
+
+                    b.Property<string>("PaymentStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubscriberId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TxToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PayPalResponses");
+                });
+
             modelBuilder.Entity("WebStore.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -333,10 +390,16 @@ namespace WebStore.Data.Migrations
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<string>("ShadeColor")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SpecialTagId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -375,14 +438,22 @@ namespace WebStore.Data.Migrations
                     b.Property<int>("AppointmentId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProductsForAppointments");
                 });
@@ -532,9 +603,15 @@ namespace WebStore.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WebStore.Models.ClientUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Appointments");
 
                     b.Navigation("Products");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

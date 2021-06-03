@@ -22,6 +22,12 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Resources\Areas\Admin\Controllers\" />
+    <Folder Include="Resources\Areas\Admin\Views\" />
+    <Folder Include="Resources\Areas\Customer\Controllers\" />
+    <Folder Include="Resources\Areas\Customer\Views\" />
+    <Folder Include="Resources\Areas\Identity\Controllers\" />
+    <Folder Include="Resources\Areas\Identity\Views\" />
     <Folder Include="wwwroot\Images\ProductImage\" />
   </ItemGroup>
 

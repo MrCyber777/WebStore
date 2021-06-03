@@ -1,12 +1,10 @@
-﻿
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace WebStore.Extensions
 {
-    public  static class IEnumerableExtension
+    public static class IEnumerableExtension
     {
         // 1. Создаём метод, который по умолчанию будет возвращать тип IEnumerable<SelectListItem>
         // А принимать в качестве параметров дженерик коллекцию IEnumerable и int selectedValue
@@ -21,7 +19,8 @@ namespace WebStore.Extensions
                        Selected = item.GetPropertyValue("Id").Equals(selectedValue.ToString())
                    };
         }
-        public static IEnumerable<SelectListItem>ToSelectListItem<T>(this IEnumerable<T>items,string selectedValue)
+
+        public static IEnumerable<SelectListItem> ToSelectListItem<T>(this IEnumerable<T> items, string selectedValue)
         {
             if (selectedValue is null)
                 selectedValue = "";
@@ -33,6 +32,5 @@ namespace WebStore.Extensions
                        Selected = item.GetPropertyValue("Id").Equals(selectedValue)
                    };
         }
-
     }
 }

@@ -61,7 +61,6 @@
                 </div>
             }
 
-
             <div class="row form-group">
                 <div class="col-8 offset-4">
                     @{
@@ -72,17 +71,15 @@
                     }
                     @if (isInCart == true)
                     {
-                        <button type="submit" class="btn btn-danger form-control" asp-action="Remove" asp-route-id="@Model.Id">Remove From Cart</button>                       
+                        <button type="submit" class="btn btn-danger form-control" asp-action="Remove" asp-route-id="@Model.Id">Remove From Cart</button>
                     }
-                    
+
                     else
-                    {                        
+                    {
                         <button type="submit" class="btn btn-primary form-control" asp-route-id="@Model.Id">Add To Cart</button>
                     }
                 </div>
             </div>
-
-
         </div>
 
         <div class="col-3 offset-1">

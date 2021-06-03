@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,10 +19,7 @@ namespace WebStore.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
-        private int _pageSize = 3;
-
-        [BindProperty]
-        public ProductsViewModel productsVM { get; set; }
+        //private int _pageSize = 3;
 
         public HomeController(ApplicationDbContext db)
         {
@@ -32,45 +31,22 @@ namespace WebStore.Customer.Controllers
                 SpecialTags = _db.SpecialTags.ToList()
             };
         }
-        public async Task<IActionResult> Index(int productPage = 1)
-        {
-            StringBuilder param = new();
-            param.Append("/Customer/Home?productPage=:");
 
-            //var productList = await _db.Products.ToListAsync();
-            ProductListViewModel productsVM = new();
-            productsVM.Products = await _db.Products.ToListAsync();
-
-            var count = productsVM.Products.Count;
-            productsVM.Products = productsVM.Products.OrderBy(x => x.Name)
-                                                   .Skip((productPage - 1) * _pageSize)
-                                                   .Take(_pageSize)
-                                                   .ToList();
-
-            productsVM.PaginationInfo = new()
-            {
-                CurrentPage=productPage,
-                ItemPerPage=_pageSize,
-                TotalItems=count,
-                UrlParam=param.ToString()
-            };
-
-
-            return View(productsVM);
-        }
-      
+        [BindProperty]
+        public ProductsViewModel productsVM { get; set; }
         [HttpGet]
-        public async Task<IActionResult>Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
                 return NotFound();
             Product product = await _db.Products.FindAsync(id);
-                                                                       
+
             if (product == null)
-                     return NotFound();
+                return NotFound();
 
             return View(product);
-        } 
+        }
+
         [HttpPost]
         [ActionName("Details")]
         [ValidateAntiForgeryToken]
@@ -91,7 +67,34 @@ namespace WebStore.Customer.Controllers
 
             // Переадресовываем пользователя на страницу Index
             return RedirectToAction(nameof(Index));
-        }      
+        }
+
+        public async Task<IActionResult> Index(int productPage = 1)
+        {
+            StringBuilder param = new();
+            param.Append("/Customer/Home?productPage=:");
+
+            //var productList = await _db.Products.ToListAsync();
+            ProductListViewModel productsVM = new();
+            productsVM.Products = await _db.Products.ToListAsync();
+
+            var count = productsVM.Products.Count;
+            productsVM.Products = productsVM.Products.OrderBy(x => x.Name)
+                                                   .Skip((productPage - 1) * SD.PageSize)
+                                                   .Take(SD.PageSize)
+                                                   .ToList();
+
+            productsVM.PaginationInfo = new()
+            {
+                CurrentPage=productPage,
+                ItemPerPage= SD.PageSize,
+                TotalItems=count,
+                UrlParam=param.ToString()
+            };
+
+
+            return View(productsVM);
+        }
         public IActionResult Remove(int id)
         {
             // Создать массив типа Лист и записать в него десериализованные данные из сессии
@@ -102,7 +105,7 @@ namespace WebStore.Customer.Controllers
             {
                 // Check, if element contains
                 if (listOfShoppingCart.Contains(id))
-                    listOfShoppingCart.Remove(id);             
+                    listOfShoppingCart.Remove(id);
             }
             // Update session data
             HttpContext.Session.Set(SD.SessionKey, listOfShoppingCart);
@@ -112,6 +115,18 @@ namespace WebStore.Customer.Controllers
 
             // Redirect to index page
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions {Expires=DateTimeOffset.UtcNow.AddYears(1)}
+                );
+
+            return LocalRedirect(returnUrl);
         }
     }
 }

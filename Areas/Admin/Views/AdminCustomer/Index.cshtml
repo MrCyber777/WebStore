@@ -46,13 +46,12 @@
                         @item.LockoutEnd.Value.ToString("dd.MM.yyyy");
                     }
                 </td>
-                <td><a asp-action="BanByIp" asp-route-id="@item.Id" class="btn btn-danger">Ban IP</a></td>
-                <td><a asp-action="BanByMac" asp-route-id="@item.Id" class="btn btn-danger">Ban MAC</a></td>
+                @*<td><a asp-action=" BanByIpOrMac" asp-route-id="@item.Id" class="btn btn-danger">Ban IP</a></td>
+                    <td><a asp-action="BanByMac" asp-route-id="@item.Id" class="btn btn-danger">Ban MAC</a></td>*@
+                <td>@Html.ActionLink("Ban IP", "BanByIpOrMac", "AdminCustomer", new { id = @item.Id, isIp = true }, new { @class = "btn btn-danger" }) </td>
+                <td>@Html.ActionLink("Ban MAC", "BanByIpOrMac", "AdminCustomer", new { id = @item.Id, isIp = false }, new { @class = "btn btn-danger" })</td>
                 <td>@*TODO:Ban 3 days*@</td>
             </tr>
         }
     </tbody>
 </table>
-
-
-

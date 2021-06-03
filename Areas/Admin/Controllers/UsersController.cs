@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebStore.Data;
-using WebStore.Models.ViewModel;
-using WebStore.Utility;
 
 namespace WebStore.Areas.Admin.Controllers
 {
@@ -14,13 +8,12 @@ namespace WebStore.Areas.Admin.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _db;
-             
-        public UsersController(  ApplicationDbContext db)
+
+        public UsersController(ApplicationDbContext db)
         {
             _db = db;
-                    
         }
-      
+
         //[HttpGet]
         //public IActionResult Create()
         //{
@@ -51,7 +44,6 @@ namespace WebStore.Areas.Admin.Controllers
         //    IdentityUser appUser = await _userManager.FindByIdAsync(id);
         //    if (appUser is null)
         //        return NotFound();
-            
 
         //    EditUserViewModel model = new EditUserViewModel { Id = appUser.Id, Email = appUser.Email };
 

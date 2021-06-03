@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace WebStore.Models.ViewModel
 {
@@ -8,6 +7,5 @@ namespace WebStore.Models.ViewModel
         public Appointment Appointment { get; set; }
         public List<Product> Products { get; set; }
         public List<ApplicationUser> SalesPersons { get; set; }
-       
     }
 }

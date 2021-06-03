@@ -1,11 +1,4 @@
-﻿
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -13,26 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using WebStore.Models;
 using WebStore.Utility;
 
 namespace WebStore.Areas.Identity.Pages.Account
 {
-    [Authorize(Roles =SD.SuperAdminEndUser)]
+    [Authorize(Roles = SD.SuperAdminEndUser)]
     public class RegisterModel : PageModel
     {
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger<RegisterModel> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
-        private readonly RoleManager<IdentityRole>_roleManager;
-
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole>roleManager)
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,43 +39,12 @@ namespace WebStore.Areas.Identity.Pages.Account
             _roleManager = roleManager;
         }
 
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
-
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string Password { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
-
-            [Required]
-            public string Name { get;  set; }
-            [Required]
-            [Display(Name="Phone number")]
-            public string PhoneNumber { get; set; }          
-            [Display(Name="Super admin")]
-            public bool IsSuperAdmin { get; set; }
-            [Display(Name = "User")]
-            public bool IsUser { get; set; }
-
-        }
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -89,7 +56,7 @@ namespace WebStore.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
-            {            
+            {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, Name = Input.Name, PhoneNumber = Input.PhoneNumber };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -100,13 +67,11 @@ namespace WebStore.Areas.Identity.Pages.Account
                         await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
                     if (!await _roleManager.RoleExistsAsync(SD.User))
                         await _roleManager.CreateAsync(new IdentityRole(SD.User));
-                   
 
-                    if  (Input.IsSuperAdmin)
+                    if (Input.IsSuperAdmin)
                         await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
                     if (Input.IsUser)
                         await _userManager.AddToRoleAsync(user, SD.User);
-
                     else
                         await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
 
@@ -131,8 +96,8 @@ namespace WebStore.Areas.Identity.Pages.Account
                     {
                         //await _signInManager.SignInAsync(user, isPersistent: false);
                         //return LocalRedirect(returnUrl);
-                        return RedirectToAction("Index", "AdminUsers", new {  area = "Admin"  });                
-                    }                  
+                        return RedirectToAction("Index", "AdminUsers", new { area = "Admin" });
+                    }
                 }
                 foreach (var error in result.Errors)
                 {
@@ -142,6 +107,37 @@ namespace WebStore.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        public class InputModel
+        {
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
+            [Display(Name = "Super admin")]
+            public bool IsSuperAdmin { get; set; }
+
+            [Display(Name = "User")]
+            public bool IsUser { get; set; }
+
+            [Required]
+            public string Name { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+            [Required]
+            [Display(Name = "Phone number")]
+            public string PhoneNumber { get; set; }
         }
     }
 }
