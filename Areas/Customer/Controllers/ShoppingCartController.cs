@@ -24,7 +24,7 @@ namespace WebStore.Areas.Customer.Controllers
             _db = db;
             ShoppingCartVM = new()
             {
-                Products = new()              
+                Products = new()
             };
         }
 
@@ -39,7 +39,7 @@ namespace WebStore.Areas.Customer.Controllers
             foreach (var item in listOfProducts)
             {
                 ShoppingCartVM.Products.Add(await _db.Products.Include(x => x.ProductTypes)
-                                                              .Include(x => x.SpecialTags)                                                               
+                                                              .Include(x => x.SpecialTags)
                                                               .FirstOrDefaultAsync(x => x.Id == item.ProductId));
             }
 
@@ -52,11 +52,10 @@ namespace WebStore.Areas.Customer.Controllers
         public async Task<IActionResult> Index(int productPage = 1)
         {
             StringBuilder param = new();
-            param.Append("/Customer/ShoppingCart?productPage=:");
-
+            param.Append("/Customer/ShoppingCart?productPage=:");           
             List<int> listOfShoppingCart = HttpContext.Session.Get<List<int>>(SD.SessionKey);
-
-            if (listOfShoppingCart.Count > 0)
+           
+            if ((listOfShoppingCart is not null) && (listOfShoppingCart.Count > 0))
             {
                 foreach (var cartItem in listOfShoppingCart)
                 {
@@ -64,7 +63,7 @@ namespace WebStore.Areas.Customer.Controllers
                                                         .Include(x => x.SpecialTags)
                                                         .FirstOrDefaultAsync(x => x.Id == cartItem);
 
-                    ShoppingCartVM.Products.Add(product);                   
+                    ShoppingCartVM.Products.Add(product);
                 }
             }
             var count = ShoppingCartVM.Products.Count;
@@ -79,7 +78,7 @@ namespace WebStore.Areas.Customer.Controllers
                 ItemPerPage = SD.PageSize,
                 TotalItems = count,
                 UrlParam = param.ToString()
-            };          
+            };
 
             return View(ShoppingCartVM);
         }
@@ -96,7 +95,7 @@ namespace WebStore.Areas.Customer.Controllers
                                                                     .AddMinutes(ShoppingCartVM.Appointment.AppointmentTime.Minute);
 
             Appointment appointment = ShoppingCartVM.Appointment;
-           
+
 
             _db.Appointments.Add(appointment);
             await _db.SaveChangesAsync();
@@ -109,7 +108,7 @@ namespace WebStore.Areas.Customer.Controllers
                 {
                     AppointmentId = appointmentId,
                     ProductId = cartItem
-                };              
+                };
 
                 _db.ProductsForAppointments.Add(productsForAppointment);
             }
@@ -124,7 +123,9 @@ namespace WebStore.Areas.Customer.Controllers
         public async Task<IActionResult> Success()
         {
             var result = PDTHolder.Success(Request.Query["tx"].ToString());
-            _db.PayPalResponses.Add(result);
+            int appointmentId = (int)TempData["AppointmentId"];
+            result.AppointmentId = appointmentId;
+            await _db.PayPalResponses.AddAsync(result);
             await _db.SaveChangesAsync();
             return View(result);
         }

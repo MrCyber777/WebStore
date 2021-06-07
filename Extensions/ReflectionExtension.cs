@@ -1,10 +1,11 @@
-﻿namespace WebStore.Extensions
+﻿
+namespace WebStore.Extensions
 {
     public static class ReflectionExtension
     {
         public static string GetPropertyValue<T>(this T item, string propertyName)
-        {
-            return item.GetType().GetProperty(propertyName).GetValue(item, null).ToString();
-        }
+        {                               
+            return item.GetType().GetProperty(propertyName).GetValue(item,null).ToString();
+        }      
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model WebStore.Models.ViewModel.ShoppingCartViewModel
 @{
     ViewData["Title"] = "AppointmentConfirmation";
+    TempData["AppointmentId"] = Model.Appointment.Id;
     int count = 1;
 
 }

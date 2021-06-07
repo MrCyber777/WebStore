@@ -2,6 +2,14 @@
 @{
     ViewData["Title"] = "Edit";
 }
+@if (TempData["SM"] != null)
+{
+    <div class="row text-center">
+        <div class="col-12 alert alert-success">
+            @TempData["SM"]
+        </div>
+    </div>
+}
 
 <h2 class="text-info">Edit Admin User</h2>
 <form method="post">
@@ -10,30 +18,30 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
         <div class="row form-group">
-            <div class="col-2">
+            <div class="col-sm-6 col-md-2">
                 <label asp-for="Name"></label>
             </div>
-            <div class="col-5">
+            <div class="col-sm-8 col-md-6">
                 <input asp-for="Name" class="form-control" />
             </div>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="row form-group">
-            <div class="col-2">
+            <div class="col-sm-6 col-md-2">
                 <label asp-for="Email"></label>
             </div>
-            <div class="col-5">
+            <div class="col-sm-8 col-md-6">
                 <input asp-for="Email" class="form-control" disabled />
             </div>
         </div>
 
         <div class="row form-group mb-2">
-            <div class="col-2">
+            <div class="col-sm-6 col-md-2">
 
                 <label asp-for="PhoneNumber"></label>
             </div>
-            <div class="col-5">
+            <div class="col-sm-8 col-md-6">
                 <input asp-for="PhoneNumber" class="form-control" />
             </div>
             <span asp-validation-for="PhoneNumber"></span>

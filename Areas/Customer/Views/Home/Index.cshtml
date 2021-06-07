@@ -4,6 +4,14 @@
 @{
     ViewData["Title"] = "Index";
 }
+@if (TempData["SM"] != null)
+{
+    <div class="row text-center">
+        <div class="col-12 alert alert-success">
+            @TempData["SM"]            
+        </div>
+    </div>
+}
 
 <div class="row">
     @foreach (var item in Model.Products)
@@ -17,7 +25,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-column justify-content-between align-items-center">
                         <div class="btn-group">
                             <h6 class="text-danger"><b>@String.Format("{0:C}", @item.Price)</b></h6>
                         </div>

@@ -45,6 +45,7 @@ namespace WebStore.Areas.Admin.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeletePost(string id)
         {
+            
             ApplicationUser userFromDB = await _db.ApplicationUsers.FindAsync(id);
             if (userFromDB == null)
                 return NotFound();
@@ -76,14 +77,17 @@ namespace WebStore.Areas.Admin.Controllers
         {
             if (applicationUser.Id != id)
                 return NotFound();
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
                 return View(applicationUser);
 
             ApplicationUser userFromDB = await _db.ApplicationUsers.FindAsync(id);
             userFromDB.Name = applicationUser.Name;
             userFromDB.PhoneNumber = applicationUser.PhoneNumber;
+            userFromDB.Email = applicationUser.Email;
+           
 
             await _db.SaveChangesAsync();
+            TempData["SM"] = $"Admin user has been edited successfully!";
 
             return RedirectToAction(nameof(Index));
         }

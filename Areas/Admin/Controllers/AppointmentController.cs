@@ -24,6 +24,7 @@ namespace WebStore.Areas.Admin
 
         [BindProperty]
         public AppointmentViewModel appointmentVM { get; set; } = new();
+
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -96,6 +97,7 @@ namespace WebStore.Areas.Admin
 
             return View(details);
         }
+
         private async Task<AppointmentDetailsViewModel> GetDetailsAsync(int? id)
         {
             var products = (from p in _db.Products
@@ -144,7 +146,7 @@ namespace WebStore.Areas.Admin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(AppointmentDetailsViewModel detailsVM, int id)
+        public async Task<IActionResult> Edit(AppointmentDetailsViewModel detailsVM, int? id)
         {
             if (id != detailsVM.Appointment.Id)
                 return NotFound();
@@ -164,7 +166,7 @@ namespace WebStore.Areas.Admin
             appointmentFromDB.IsConfirmed = detailsVM.Appointment.IsConfirmed;
             appointmentFromDB.CustomerSurname = detailsVM.Appointment.CustomerSurname;
             appointmentFromDB.City = detailsVM.Appointment.City;
-            appointmentFromDB.Country = detailsVM.Appointment.City;
+            appointmentFromDB.Country = detailsVM.Appointment.Country;
             appointmentFromDB.Line1 = detailsVM.Appointment.Line1;
             appointmentFromDB.Zip = detailsVM.Appointment.Zip;
 

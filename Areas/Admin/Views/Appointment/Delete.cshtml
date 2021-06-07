@@ -4,132 +4,157 @@
 @{
     ViewData["Title"] = "Delete";
 }
-
+@if (TempData["SM"] != null)
+{
+    <div class="row text-center">
+        <div class="col-12 alert alert-success" role="alert">
+            @TempData["SM"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
 <h1 class="mt-1 text-info">Delete appointment</h1>
 <form method="post" asp-action="Delete">
+
     <input type="hidden" asp-for="Appointment.Id" />
     <div class="p-4 border rounded row">
-        <div class="col-6">
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.AppointmentDay"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.AppointmentDay" class="form-control" disabled />
-                </div>
-            </div>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped" width="100%">
+                    <tbody>
+                        <partial name="_AppointmentProductDetailsPartial" model="@Model.Products" />
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.AppointmentDay"></label>
+                            <input asp-for="Appointment.AppointmentDay" class="form-control" disabled />
+                        </div>
+                    </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.CustomerName"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.CustomerName" class="form-control" disabled />
-                </div>
-            </div>
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.CustomerSurname"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.CustomerSurname" class="form-control" disabled />
-                </div>
-            </div>
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.CustomerPhoneNumber"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.CustomerPhoneNumber" class="form-control" disabled />
-                </div>
-            </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.CustomerName"></label>
+                            <input asp-for="Appointment.CustomerName" class="form-control" disabled />
+                        </div>
+                    </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.CustomerEmail"></label>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.CustomerSurname"></label>
+                            <input asp-for="Appointment.CustomerSurname" class="form-control" disabled />
+                        </div>
+                    </div>
                 </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.CustomerEmail" class="form-control" disabled />
-                </div>
-            </div>
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.Line1"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.Line1" class="form-control" disabled />
-                </div>
-            </div>
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.Zip"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.Zip" class="form-control" disabled />
-                </div>
-            </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.City"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.City" class="form-control" disabled />
-                </div>
-            </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.Country"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.Country" class="form-control" disabled />
-                </div>
-            </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.CustomerPhoneNumber"></label>
+                            <input asp-for="Appointment.CustomerPhoneNumber" class="form-control" disabled />
+                        </div>
+                    </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.SalesPerson"></label>
-                </div>
-                <div class="col-7">
-                    @if (User.IsInRole(SD.SuperAdminEndUser))
-                    {
-                        <select asp-for="@Model.Appointment.SalesPersonID" asp-items="@Model.SalesPersons.ToSelectListItem(Model.Appointment.SalesPersonID)" class="form-control" disabled>
-                            <option value="">Select a SalesPerson</option>
-                        </select>
-                    }
-                    else if (User.IsInRole(SD.AdminEndUser))
-                    {
-                        <input type="hidden" asp-for="@Model.Appointment.SalesPersonID" />
-                        <input asp-for="@Model.Appointment.SalesPerson.Name" class="form-control" disabled />
-                    }
-                </div>
-            </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.CustomerPhoneNumber"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.CustomerPhoneNumber" class="form-control" disabled />
-                </div>
-            </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.CustomerEmail"></label>
+                            <input asp-for="Appointment.CustomerEmail" class="form-control" disabled />
+                        </div>
+                    </div>
 
-            <div class="row form-group">
-                <div class="col-3">
-                    <label asp-for="Appointment.IsConfirmed"></label>
-                </div>
-                <div class="col-7">
-                    <input asp-for="Appointment.IsConfirmed" class="form-control" style="width: 15px" disabled />
-                </div>
-            </div>
-        </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.Line1"></label>
+                            <input asp-for="Appointment.Line1" class="form-control" disabled />
+                        </div>
+                    </div>
 
-        <div class="col-6">
+                </div>
+
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.Zip"></label>
+                            <input asp-for="Appointment.Zip" class="form-control" disabled />
+                        </div>
+                    </div>
+
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.City"></label>
+                            <input asp-for="Appointment.City" class="form-control" disabled />
+                        </div>
+                    </div>
+
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.Country"></label>
+                            <input asp-for="Appointment.Country" class="form-control" disabled />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.SalesPerson"></label>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row">*@                                        
+                            @if (User.IsInRole(SD.SuperAdminEndUser))
+                            {<div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+
+                                            <select asp-for="Appointment.SalesPersonID" asp-items='Model.SalesPersons.ToSelectListItem(Model.Appointment.SalesPersonID)' class="form-control" disabled>
+                                                <option value="">Select a SalesPerson</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (User.IsInRole(SD.AdminEndUser))
+                            {
+                                <input type="hidden" asp-for="@Model.Appointment.SalesPersonID" />
+                                <input asp-for="@Model.Appointment.SalesPerson.Name" class="form-control" disabled />
+                            }
+                            @*</div>*@                                       
+                @*</div>*@
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.CustomerPhoneNumber"></label>
+                            <input asp-for="Appointment.CustomerPhoneNumber" class="form-control" disabled />
+                        </div>
+                    </div>                  
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Appointment.IsConfirmed"></label>
+                            <input asp-for="Appointment.IsConfirmed" class="form-control" style="width: 15px" disabled />
+                        </div>
+                    </div>                   
+                </div>
+
+                @*<div class="col-6">
             <partial name="_AppointmentProductDetailsPartial" model="@Model.Products" />
+        </div>*@
+                <br />
+            </div>
         </div>
-        <br />
-
         <div class="form-group">
             <input type="submit" asp-route-id="@Model.Appointment.Id" class="btn btn-danger" value="Delete" />
             <a class="btn btn-success" asp-action="Index">Back to list</a>
